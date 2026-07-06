@@ -1,0 +1,224 @@
+.dash-root {
+  display: flex;
+  min-height: 100vh;
+}
+
+.dash-sidebar {
+  width: 240px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  transition: background 300ms ease, border-color 300ms ease;
+}
+
+.lp-root[data-theme='light'] .dash-sidebar {
+  background: #e1f5ee;
+  border-right: 1px solid #9fe1cb;
+}
+
+.lp-root[data-theme='dark'] .dash-sidebar {
+  background: linear-gradient(180deg, #04342c, #2c2c2a);
+  border-right: 1px solid #085041;
+}
+
+.dash-sidebar__top {
+  margin-bottom: 32px;
+  padding: 0 12px;
+}
+
+.dash-logo {
+  display: block;
+  font-size: 18px;
+}
+
+.dash-plan {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.75;
+  text-transform: capitalize;
+}
+
+.dash-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.dash-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border-left: 3px solid transparent;
+  font-size: 14px;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.lp-root[data-theme='light'] .dash-nav-item {
+  color: #0f6e56;
+}
+
+.lp-root[data-theme='dark'] .dash-nav-item {
+  color: #9fe1cb;
+}
+
+.lp-root[data-theme='light'] .dash-nav-item--active {
+  background: #c8eddf;
+  color: #04342c;
+  border-left-color: #1d9e75;
+  font-weight: 600;
+}
+
+.lp-root[data-theme='dark'] .dash-nav-item--active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-left-color: #5dcaa5;
+  font-weight: 600;
+}
+
+.dash-sidebar__footer {
+  margin-top: auto;
+  padding: 16px 12px 0;
+  border-top: 1px solid var(--lp-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dash-email {
+  font-size: 13px;
+  opacity: 0.8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  color: inherit;
+  cursor: pointer;
+}
+
+.dash-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: background-color 300ms ease;
+}
+
+.lp-root[data-theme='light'] .dash-content {
+  background: #f2faf7;
+}
+
+.lp-root[data-theme='dark'] .dash-content {
+  background: #0e0e0d;
+}
+
+.dash-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-bottom: 1px solid transparent;
+  transition: background-color 300ms ease, border-color 300ms ease;
+}
+
+.lp-root[data-theme='light'] .dash-topbar {
+  background: #ffffff;
+  border-bottom-color: #9fe1cb;
+}
+
+.lp-root[data-theme='dark'] .dash-topbar {
+  border-bottom-color: #444441;
+}
+
+.dash-main {
+  flex: 1;
+  padding: 24px;
+}
+
+.dash-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.lp-root[data-theme='light'] .dash-badge--active {
+  background: #e1f5ee;
+  color: #1d9e75;
+}
+
+.lp-root[data-theme='dark'] .dash-badge--active {
+  background: #04342c;
+  color: #5dcaa5;
+}
+
+.dash-badge--inactive {
+  color: var(--lp-muted);
+  border: 1px solid var(--lp-border);
+}
+
+.dash-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: currentColor;
+  animation: dash-live-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes dash-live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.dash-stat-card {
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid;
+  transition: background-color 300ms ease, border-color 300ms ease;
+}
+
+.lp-root[data-theme='light'] .dash-stat-card {
+  background: #ffffff;
+  border-color: #9fe1cb;
+}
+
+.lp-root[data-theme='dark'] .dash-stat-card {
+  background: #1a1a18;
+  border-color: #444441;
+}
+
+.lp-root[data-theme='light'] .dash-stat-card--highlight {
+  background: #e1f5ee;
+}
+
+.lp-root[data-theme='dark'] .dash-stat-card--highlight {
+  background: #04342c;
+  border-color: #085041;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dash-live-dot {
+    animation: none;
+  }
+}

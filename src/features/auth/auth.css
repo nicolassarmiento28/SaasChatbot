@@ -1,0 +1,129 @@
+.auth-root {
+  min-height: 100vh;
+  display: flex;
+}
+
+.auth-panel-left {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 64px;
+  color: #f1efe8;
+}
+
+.lp-root[data-theme='light'] .auth-panel-left {
+  background: #2c2c2a;
+}
+
+.lp-root[data-theme='dark'] .auth-panel-left {
+  background: linear-gradient(135deg, #2c2c2a, #04342c);
+}
+
+@media (min-width: 768px) {
+  .auth-panel-left {
+    display: flex;
+  }
+}
+
+.auth-tagline {
+  font-size: 20px;
+  max-width: 340px;
+  opacity: 0.85;
+  margin: 0;
+}
+
+.auth-mockup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 320px;
+  margin-top: 16px;
+}
+
+.auth-mockup__bubble {
+  border-radius: 18px;
+  padding: 12px 16px;
+  font-size: 14px;
+  max-width: 85%;
+}
+
+.auth-mockup__bubble--customer {
+  background: #444441;
+  color: #f1efe8;
+  border-bottom-right-radius: 4px;
+  margin-left: auto;
+}
+
+.auth-mockup__bubble--bot {
+  background: #5dcaa5;
+  color: #04342c;
+  border-bottom-left-radius: 4px;
+  margin-right: auto;
+}
+
+.auth-panel-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  transition: background-color 300ms ease;
+}
+
+.lp-root[data-theme='light'] .auth-panel-right {
+  background: #f2faf7;
+}
+
+.lp-root[data-theme='dark'] .auth-panel-right {
+  background: #0e0e0d;
+}
+
+.auth-card-wrap {
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-back-link {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  background: none;
+  border: none;
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.lp-root[data-theme='light'] .auth-back-link {
+  color: #0f6e56;
+}
+
+.lp-root[data-theme='dark'] .auth-back-link {
+  color: #9fe1cb;
+}
+
+.auth-back-link:hover {
+  color: #1d9e75;
+}
+
+.auth-card.ant-card {
+  width: 100%;
+  transition: background 300ms ease, border-color 300ms ease;
+}
+
+.lp-root[data-theme='light'] .auth-card.ant-card {
+  background: #ffffff;
+}
+
+.lp-root[data-theme='dark'] .auth-card.ant-card {
+  background: rgba(26, 26, 24, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: var(--lp-border);
+}
+
+.auth-card .ant-input,
+.auth-card .ant-input-affix-wrapper {
+  border-color: var(--lp-border);
+}
