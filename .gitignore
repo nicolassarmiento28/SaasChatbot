@@ -3,3 +3,5 @@ dist
 .env.local
 supabase/.temp
 tsconfig.tsbuildinfo
+.claude
+.agents
