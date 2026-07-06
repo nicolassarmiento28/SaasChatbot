@@ -18,7 +18,11 @@ export function LandingLayout({ children }: { children: ReactNode }) {
         token: { colorPrimary: PRIMARY[mode], colorBgLayout: BG_LAYOUT[mode], borderRadius: 12 },
       }}
     >
-      <div className="lp-root" data-theme={mode} style={{ minHeight: '100vh', overflowX: 'hidden' }}>
+      <div
+        className="lp-root"
+        data-theme={mode}
+        style={{ minHeight: '100vh', overflowX: 'hidden', touchAction: 'pan-y' }}
+      >
         <Navbar mode={mode} onToggleTheme={toggle} />
         {children}
         <Footer />
