@@ -15,6 +15,7 @@ export function KnowledgeSourceList({ sources, loading, onEdit, onDelete }: Know
       loading={loading}
       dataSource={sources}
       pagination={false}
+      scroll={{ x: 'max-content' }}
       columns={[
         { title: 'Título', dataIndex: 'title' },
         { title: 'Tipo', dataIndex: 'type', render: (type: string) => <Tag>{type}</Tag> },

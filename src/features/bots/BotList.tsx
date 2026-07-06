@@ -26,6 +26,7 @@ export function BotList({
       loading={loading}
       dataSource={bots}
       pagination={false}
+      scroll={{ x: 'max-content' }}
       columns={[
         {
           title: '',

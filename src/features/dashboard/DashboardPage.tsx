@@ -10,13 +10,13 @@ export function DashboardPage() {
         Dashboard
       </Typography.Title>
 
-      <Row gutter={16}>
-        <Col span={8}>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={12} lg={8}>
           <div className="dash-stat-card dash-stat-card--highlight">
             {loading ? <Spin /> : <Statistic title="Conversaciones activas hoy" value={activeConversationsToday} />}
           </div>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} lg={8}>
           <div className="dash-stat-card">
             {loading ? (
               <Spin />
@@ -25,7 +25,7 @@ export function DashboardPage() {
             )}
           </div>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={24} lg={8}>
           <div className="dash-stat-card">
             <Typography.Text strong>Bots</Typography.Text>
             <Space direction="vertical" style={{ marginTop: 12, width: '100%' }}>

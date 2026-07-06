@@ -1,6 +1,14 @@
-import { ConfigProvider, theme } from 'antd';
+import { useState } from 'react';
+import { ConfigProvider, Drawer, theme } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { BarChartOutlined, DashboardOutlined, LogoutOutlined, MessageOutlined, RobotOutlined } from '@ant-design/icons';
+import {
+  BarChartOutlined,
+  DashboardOutlined,
+  LogoutOutlined,
+  MenuOutlined,
+  MessageOutlined,
+  RobotOutlined,
+} from '@ant-design/icons';
 import { supabase } from '../../shared/supabaseClient';
 import { useSession } from '../auth/useSession';
 import { useTheme } from '../landing/useTheme';
@@ -17,11 +25,57 @@ const NAV_ITEMS = [
 
 const PRIMARY = { light: '#1D9E75', dark: '#1D9E75' };
 
+function SidebarContent({
+  plan,
+  email,
+  activePath,
+  onNavigate,
+}: {
+  plan: string | null;
+  email: string | undefined;
+  activePath: string;
+  onNavigate?: () => void;
+}) {
+  return (
+    <>
+      <div className="dash-sidebar__top">
+        <span className="lp-display dash-logo">SaasChatbotIA</span>
+        <span className="dash-plan">Plan {plan ?? 'free'}</span>
+      </div>
+
+      <nav className="dash-nav">
+        {NAV_ITEMS.map((item) => {
+          const active = item.exact ? activePath === item.to : activePath.startsWith(item.to);
+          return (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`dash-nav-item ${active ? 'dash-nav-item--active' : ''}`}
+              onClick={onNavigate}
+            >
+              {item.icon}
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+
+      <div className="dash-sidebar__footer">
+        <span className="dash-email">{email}</span>
+        <button type="button" className="dash-logout" onClick={() => supabase.auth.signOut()}>
+          <LogoutOutlined /> Cerrar sesión
+        </button>
+      </div>
+    </>
+  );
+}
+
 export function DashboardLayout() {
   const { mode } = useTheme();
   const { session } = useSession();
   const { plan } = useDashboardSummary();
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <ConfigProvider
@@ -32,33 +86,19 @@ export function DashboardLayout() {
     >
       <div className="lp-root dash-root" data-theme={mode}>
         <aside className="dash-sidebar">
-          <div className="dash-sidebar__top">
-            <span className="lp-display dash-logo">SaasChatbotIA</span>
-            <span className="dash-plan">Plan {plan ?? 'free'}</span>
-          </div>
-
-          <nav className="dash-nav">
-            {NAV_ITEMS.map((item) => {
-              const active = item.exact ? location.pathname === item.to : location.pathname.startsWith(item.to);
-              return (
-                <Link key={item.to} to={item.to} className={`dash-nav-item ${active ? 'dash-nav-item--active' : ''}`}>
-                  {item.icon}
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="dash-sidebar__footer">
-            <span className="dash-email">{session?.user.email}</span>
-            <button type="button" className="dash-logout" onClick={() => supabase.auth.signOut()}>
-              <LogoutOutlined /> Cerrar sesión
-            </button>
-          </div>
+          <SidebarContent plan={plan} email={session?.user.email} activePath={location.pathname} />
         </aside>
 
         <div className="dash-content">
           <header className="dash-topbar">
+            <button
+              type="button"
+              className="dash-menu-trigger"
+              aria-label="Abrir menú"
+              onClick={() => setMenuOpen(true)}
+            >
+              <MenuOutlined />
+            </button>
             <span className="dash-badge dash-badge--active">
               <span className="dash-live-dot" /> En vivo
             </span>
@@ -67,6 +107,25 @@ export function DashboardLayout() {
             <Outlet />
           </main>
         </div>
+
+        <Drawer
+          className="dash-drawer"
+          placement="left"
+          closable={false}
+          open={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          width={240}
+          styles={{ body: { padding: 0 } }}
+        >
+          <div className="dash-sidebar dash-sidebar--drawer">
+            <SidebarContent
+              plan={plan}
+              email={session?.user.email}
+              activePath={location.pathname}
+              onNavigate={() => setMenuOpen(false)}
+            />
+          </div>
+        </Drawer>
       </div>
     </ConfigProvider>
   );

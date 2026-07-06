@@ -31,6 +31,7 @@ export function KnowledgeSourceForm({ open, initialSource, onCancel, onSubmit }:
   return (
     <Modal
       open={open}
+      width="min(560px, 92vw)"
       title={initialSource ? 'Editar fuente' : 'Nueva fuente de conocimiento'}
       onCancel={onCancel}
       onOk={() => form.validateFields().then(onSubmit)}

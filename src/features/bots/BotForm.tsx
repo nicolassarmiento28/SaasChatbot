@@ -31,6 +31,7 @@ export function BotForm({ open, initialBot, onCancel, onSubmit }: BotFormProps) 
   return (
     <Modal
       open={open}
+      width="min(520px, 92vw)"
       title={initialBot ? 'Editar bot' : 'Nuevo bot'}
       onCancel={onCancel}
       onOk={() => form.validateFields().then(onSubmit)}

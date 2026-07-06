@@ -16,8 +16,8 @@ export function ConversationsPage() {
   return (
     <div>
       <Typography.Title level={3}>Conversaciones</Typography.Title>
-      <Row gutter={16}>
-        <Col span={14}>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} lg={14}>
           <ConversationList
             conversations={conversations}
             bots={bots}
@@ -29,7 +29,7 @@ export function ConversationsPage() {
             onSelect={setSelected}
           />
         </Col>
-        <Col span={10}>
+        <Col xs={24} lg={10}>
           <Card title={selected ? `Conversación con ${selected.visitor_id}` : 'Detalle'}>
             <ConversationDetail
               conversationId={selected?.id ?? null}

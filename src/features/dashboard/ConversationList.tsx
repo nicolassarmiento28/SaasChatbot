@@ -32,7 +32,7 @@ export function ConversationList({
 
   return (
     <div>
-      <Space style={{ marginBottom: 12 }}>
+      <Space wrap style={{ marginBottom: 12 }}>
         <Select
           allowClear
           placeholder="Filtrar por bot"
@@ -59,6 +59,7 @@ export function ConversationList({
         loading={loading}
         dataSource={filtered}
         pagination={false}
+        scroll={{ x: 'max-content' }}
         onRow={(conversation) => ({ onClick: () => onSelect(conversation) })}
         columns={[
           { title: 'Bot', dataIndex: 'bot_id', render: (botId: string) => botNameById.get(botId) ?? botId },

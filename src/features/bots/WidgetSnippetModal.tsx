@@ -20,16 +20,26 @@ function buildDemoLink(bot: Bot): string {
 
 export function WidgetSnippetModal({ bot, onClose }: WidgetSnippetModalProps) {
   return (
-    <Modal open={bot !== null} onCancel={onClose} onOk={onClose} title={bot ? `Widget de "${bot.name}"` : ''}>
+    <Modal
+      open={bot !== null}
+      width="min(560px, 92vw)"
+      onCancel={onClose}
+      onOk={onClose}
+      title={bot ? `Widget de "${bot.name}"` : ''}
+    >
       {bot && (
         <>
           <Text strong>Snippet para embeber</Text>
-          <Paragraph copyable={{ text: buildSnippet(bot) }} code>
+          <Paragraph
+            copyable={{ text: buildSnippet(bot) }}
+            code
+            style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}
+          >
             {buildSnippet(bot)}
           </Paragraph>
 
           <Text strong>Link público de la demo</Text>
-          <Paragraph copyable={{ text: buildDemoLink(bot) }}>
+          <Paragraph copyable={{ text: buildDemoLink(bot) }} style={{ wordBreak: 'break-all' }}>
             <a href={buildDemoLink(bot)} target="_blank" rel="noreferrer">
               {buildDemoLink(bot)}
             </a>
