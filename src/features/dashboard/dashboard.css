@@ -258,8 +258,8 @@
   }
 }
 
-/* Mobile (celulares y tablets pequeñas en portrait): sidebar se vuelve drawer. */
-@media (max-width: 768px) {
+/* Mobile y tablet (xs, sm, md de Ant Design, hasta 991px): sidebar se vuelve drawer. */
+@media (max-width: 991px) {
   .dash-root {
     flex-direction: column;
   }
@@ -289,10 +289,10 @@
 
 @media (max-width: 420px) {
   .dash-main {
-    padding: 12px;
+    padding: 12px 16px;
   }
 
   .dash-topbar {
-    padding: 10px 12px;
+    padding: 10px 16px;
   }
 }
