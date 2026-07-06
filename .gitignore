@@ -5,3 +5,5 @@ supabase/.temp
 tsconfig.tsbuildinfo
 .claude
 .agents
+
+.vercel
