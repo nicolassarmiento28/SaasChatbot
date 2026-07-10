@@ -97,4 +97,45 @@ describe.skipIf(!shouldRun)('RLS cross-tenant isolation', () => {
       .select();
     expect(crossUpdate ?? []).toHaveLength(0);
   });
+
+  it('el negocio A no puede leer, subir ni borrar objetos de storage del negocio B', async () => {
+    const clientA = createClient(url!, anonKey!, { auth: { storage: memoryStorage() } });
+    const clientB = createClient(url!, anonKey!, { auth: { storage: memoryStorage() } });
+
+    await clientA.auth.signInWithPassword({ email: emailA, password });
+    await clientB.auth.signInWithPassword({ email: emailB, password });
+
+    const { data: businessA } = await clientA.from('businesses').select('id').single();
+    const { data: businessB } = await clientB.from('businesses').select('id').single();
+
+    // B sube un objeto bajo su propio prefijo de business_id.
+    const path = `${businessB!.id}/secreto.txt`;
+    const { error: uploadErrorB } = await clientB.storage
+      .from('knowledge-docs')
+      .upload(path, new Blob(['contenido confidencial de B']));
+    expect(uploadErrorB).toBeNull();
+
+    // A no puede subir un objeto bajo el prefijo de B.
+    const { error: crossUploadError } = await clientA.storage
+      .from('knowledge-docs')
+      .upload(`${businessB!.id}/intruso.txt`, new Blob(['payload de A']));
+    expect(crossUploadError).not.toBeNull();
+
+    // A no puede leer el objeto de B.
+    const { data: crossDownload, error: crossDownloadError } = await clientA.storage
+      .from('knowledge-docs')
+      .download(path);
+    expect(crossDownload).toBeNull();
+    expect(crossDownloadError).not.toBeNull();
+
+    // A no puede borrar el objeto de B.
+    const { data: crossRemove } = await clientA.storage.from('knowledge-docs').remove([path]);
+    expect(crossRemove ?? []).toHaveLength(0);
+
+    // A si puede subir bajo su propio prefijo.
+    const { error: ownUploadError } = await clientA.storage
+      .from('knowledge-docs')
+      .upload(`${businessA!.id}/propio.txt`, new Blob(['contenido de A']));
+    expect(ownUploadError).toBeNull();
+  });
 });

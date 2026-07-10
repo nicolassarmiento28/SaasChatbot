@@ -83,7 +83,17 @@ Deno.serve(async (req) => {
 
   await supabase.from('rate_limit_events').insert({ bot_id, visitor_id, ip });
 
-  let conversationId = conversation_id;
+  let conversationId: string | undefined;
+  if (conversation_id) {
+    const { data: existingConversation } = await supabase
+      .from('conversations')
+      .select('id')
+      .eq('id', conversation_id)
+      .eq('bot_id', bot_id)
+      .maybeSingle();
+    conversationId = existingConversation?.id;
+  }
+
   if (!conversationId) {
     const { data: conversation, error: convError } = await supabase
       .from('conversations')
