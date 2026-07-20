@@ -1,7 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { flagsPromptInjection, sanitizeMessage } from '../_shared/validation.ts';
 import { buildPrompt } from './promptBuilder.ts';
-import { isRateLimited } from './rateLimit.ts';
 import { detectLanguageName } from './languageDetect.ts';
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -48,21 +47,18 @@ Deno.serve(async (req) => {
 
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
 
-  const { data: recentEvents } = await supabase
-    .from('rate_limit_events')
-    .select('visitor_id, ip, bot_id, created_at')
-    .eq('bot_id', bot_id)
-    .gte('created_at', new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString());
+  const { data: isRateLimited, error: rateLimitError } = await supabase.rpc('check_and_record_rate_limit', {
+    p_bot_id: bot_id,
+    p_visitor_id: visitor_id,
+    p_ip: ip,
+    p_window_ms: RATE_LIMIT_WINDOW_MS,
+    p_max_requests: RATE_LIMIT_MAX_REQUESTS,
+  });
 
-  if (
-    isRateLimited(recentEvents ?? [], {
-      visitorId: visitor_id,
-      ip,
-      botId: bot_id,
-      windowMs: RATE_LIMIT_WINDOW_MS,
-      maxRequests: RATE_LIMIT_MAX_REQUESTS,
-    })
-  ) {
+  if (rateLimitError) {
+    return jsonResponse({ error: 'server_error' }, 500);
+  }
+  if (isRateLimited) {
     return jsonResponse({ error: 'rate_limited' }, 429);
   }
 
@@ -81,8 +77,6 @@ Deno.serve(async (req) => {
   if ((usage?.messages_count ?? 0) >= PLAN_MESSAGE_LIMIT) {
     return jsonResponse({ error: 'plan_limit_reached' }, 402);
   }
-
-  await supabase.from('rate_limit_events').insert({ bot_id, visitor_id, ip });
 
   let conversationId: string | undefined;
   if (conversation_id) {
