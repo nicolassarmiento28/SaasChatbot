@@ -25,7 +25,32 @@ const conversation: ConversationRow = {
   ended_at: null,
 };
 
+const otherConversation: ConversationRow = {
+  id: 'conv-2',
+  bot_id: 'bot-1',
+  source: 'widget',
+  visitor_id: 'visitor-2',
+  started_at: '2026-01-05T00:00:00Z',
+  ended_at: null,
+};
+
 function noop() {}
+
+const baseProps = {
+  bots: [bot],
+  loading: false,
+  botFilter: null,
+  sourceFilter: null,
+  searchQuery: '',
+  matchingIds: null,
+  dateRange: null,
+  onBotFilterChange: noop,
+  onSourceFilterChange: noop,
+  onSearchQueryChange: noop,
+  onDateRangeChange: noop,
+  onSelect: noop,
+  onGetSnippet: noop,
+};
 
 beforeEach(() => {
   vi.stubGlobal(
@@ -41,19 +66,7 @@ afterEach(() => {
 describe('ConversationList', () => {
   it('shows an empty state with a "Obtener snippet" button when there are no conversations', () => {
     const onGetSnippet = vi.fn();
-    render(
-      <ConversationList
-        conversations={[]}
-        bots={[bot]}
-        loading={false}
-        botFilter={null}
-        sourceFilter={null}
-        onBotFilterChange={noop}
-        onSourceFilterChange={noop}
-        onSelect={noop}
-        onGetSnippet={onGetSnippet}
-      />,
-    );
+    render(<ConversationList {...baseProps} conversations={[]} onGetSnippet={onGetSnippet} />);
 
     expect(screen.getByText(/Aún no hay conversaciones/)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Obtener snippet' }));
@@ -61,21 +74,22 @@ describe('ConversationList', () => {
   });
 
   it('shows the table when there are conversations', () => {
-    render(
-      <ConversationList
-        conversations={[conversation]}
-        bots={[bot]}
-        loading={false}
-        botFilter={null}
-        sourceFilter={null}
-        onBotFilterChange={noop}
-        onSourceFilterChange={noop}
-        onSelect={noop}
-        onGetSnippet={noop}
-      />,
-    );
+    render(<ConversationList {...baseProps} conversations={[conversation]} />);
 
     expect(screen.queryByText(/Aún no hay conversaciones/)).toBeNull();
     expect(screen.getByText('visitor-1')).toBeTruthy();
+  });
+
+  it('filters out conversations not matching the search results', () => {
+    render(
+      <ConversationList
+        {...baseProps}
+        conversations={[conversation, otherConversation]}
+        matchingIds={new Set(['conv-2'])}
+      />,
+    );
+
+    expect(screen.queryByText('visitor-1')).toBeNull();
+    expect(screen.getByText('visitor-2')).toBeTruthy();
   });
 });

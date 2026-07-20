@@ -1,6 +1,9 @@
-import { Button, Empty, Select, Space, Table } from 'antd';
+import type { Dayjs } from 'dayjs';
+import { Button, DatePicker, Empty, Input, Select, Space, Table } from 'antd';
 import type { Bot } from '../bots/types';
 import type { ConversationRow } from './types';
+
+const { RangePicker } = DatePicker;
 
 interface ConversationListProps {
   conversations: ConversationRow[];
@@ -8,8 +11,13 @@ interface ConversationListProps {
   loading: boolean;
   botFilter: string | null;
   sourceFilter: 'widget' | 'demo' | null;
+  searchQuery: string;
+  matchingIds: Set<string> | null;
+  dateRange: [Dayjs | null, Dayjs | null] | null;
   onBotFilterChange: (botId: string | null) => void;
   onSourceFilterChange: (source: 'widget' | 'demo' | null) => void;
+  onSearchQueryChange: (query: string) => void;
+  onDateRangeChange: (range: [Dayjs | null, Dayjs | null] | null) => void;
   onSelect: (conversation: ConversationRow) => void;
   onGetSnippet: () => void;
 }
@@ -20,17 +28,29 @@ export function ConversationList({
   loading,
   botFilter,
   sourceFilter,
+  searchQuery,
+  matchingIds,
+  dateRange,
   onBotFilterChange,
   onSourceFilterChange,
+  onSearchQueryChange,
+  onDateRangeChange,
   onSelect,
   onGetSnippet,
 }: ConversationListProps) {
   const botNameById = new Map(bots.map((bot) => [bot.id, bot.name]));
 
-  const filtered = conversations.filter(
-    (conversation) =>
-      (!botFilter || conversation.bot_id === botFilter) && (!sourceFilter || conversation.source === sourceFilter),
-  );
+  const [rangeStart, rangeEnd] = dateRange ?? [null, null];
+
+  const filtered = conversations.filter((conversation) => {
+    if (botFilter && conversation.bot_id !== botFilter) return false;
+    if (sourceFilter && conversation.source !== sourceFilter) return false;
+    if (matchingIds && !matchingIds.has(conversation.id)) return false;
+    const startedAt = new Date(conversation.started_at);
+    if (rangeStart && startedAt < rangeStart.startOf('day').toDate()) return false;
+    if (rangeEnd && startedAt > rangeEnd.endOf('day').toDate()) return false;
+    return true;
+  });
 
   if (!loading && conversations.length === 0) {
     return (
@@ -45,6 +65,13 @@ export function ConversationList({
   return (
     <div>
       <Space wrap style={{ marginBottom: 12 }}>
+        <Input.Search
+          allowClear
+          placeholder="Buscar en mensajes"
+          style={{ width: 220 }}
+          value={searchQuery}
+          onChange={(e) => onSearchQueryChange(e.target.value)}
+        />
         <Select
           allowClear
           placeholder="Filtrar por bot"
@@ -64,6 +91,7 @@ export function ConversationList({
             { label: 'Demo', value: 'demo' },
           ]}
         />
+        <RangePicker value={dateRange ?? undefined} onChange={(range) => onDateRangeChange(range)} />
       </Space>
 
       <Table

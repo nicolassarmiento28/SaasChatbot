@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import type { Dayjs } from 'dayjs';
 import { Card, Col, Row, Typography } from 'antd';
 import { useBots } from '../bots/useBots';
 import { WidgetSnippetModal } from '../bots/WidgetSnippetModal';
 import { useRealtimeConversations } from './useRealtimeConversations';
+import { useConversationSearch } from './useConversationSearch';
 import { ConversationList } from './ConversationList';
 import { ConversationDetail } from './ConversationDetail';
 import type { ConversationRow } from './types';
@@ -12,8 +14,14 @@ export function ConversationsPage() {
   const { conversations, messagesByConversation, loading, ensureMessagesLoaded } = useRealtimeConversations();
   const [botFilter, setBotFilter] = useState<string | null>(null);
   const [sourceFilter, setSourceFilter] = useState<'widget' | 'demo' | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null] | null>(null);
   const [selected, setSelected] = useState<ConversationRow | null>(null);
   const [snippetOpen, setSnippetOpen] = useState(false);
+  const { matchingIds } = useConversationSearch(
+    conversations.map((c) => c.id),
+    searchQuery,
+  );
 
   return (
     <div>
@@ -26,8 +34,13 @@ export function ConversationsPage() {
             loading={loading}
             botFilter={botFilter}
             sourceFilter={sourceFilter}
+            searchQuery={searchQuery}
+            matchingIds={matchingIds}
+            dateRange={dateRange}
             onBotFilterChange={setBotFilter}
             onSourceFilterChange={setSourceFilter}
+            onSearchQueryChange={setSearchQuery}
+            onDateRangeChange={setDateRange}
             onSelect={setSelected}
             onGetSnippet={() => setSnippetOpen(true)}
           />
