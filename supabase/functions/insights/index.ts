@@ -3,8 +3,13 @@ import { buildInsightsPrompt, hasEnoughData, mondayOf } from './insightsBuilder.
 
 const NOT_ENOUGH_DATA_MESSAGE = 'Aún no hay suficientes conversaciones para generar insights esta semana.';
 
+// insights devuelve datos privados del negocio y solo debe llamarse desde el
+// dashboard propio (a diferencia de `chat`, que el widget embebe en
+// dominios de terceros desconocidos).
+const DASHBOARD_ORIGIN = Deno.env.get('DASHBOARD_ORIGIN') ?? 'https://saaschatbotia.vercel.app';
+
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': DASHBOARD_ORIGIN,
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
