@@ -141,7 +141,7 @@ Deno.serve(async (req) => {
       Authorization: `Bearer ${Deno.env.get('GROQ_API_KEY')}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ model: 'llama-3.1-8b-instant', messages: prompt }),
+    body: JSON.stringify({ model: 'llama-3.1-8b-instant', messages: prompt, temperature: 0.3 }),
   });
 
   if (!groqResponse.ok) {

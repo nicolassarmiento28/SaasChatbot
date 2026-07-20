@@ -71,12 +71,15 @@ describe('buildPrompt', () => {
     expect(result[0].content).not.toContain('Detecta el idioma del visitante');
   });
 
-  it('adds a short reminder message right before the user turn when a language was detected', () => {
+  it('adds a reminder as a system message and appended to the user turn when a language was detected', () => {
     const result = buildPrompt('system', [], [], 'hi', [], 'inglés');
     const last = result[result.length - 1];
     const secondToLast = result[result.length - 2];
-    expect(last).toEqual({ role: 'user', content: 'hi' });
-    expect(secondToLast).toEqual({ role: 'system', content: 'Recordatorio: responde en inglés.' });
+    expect(last.role).toBe('user');
+    expect(last.content).toContain('hi');
+    expect(last.content).toContain('reply only in English');
+    expect(secondToLast.role).toBe('system');
+    expect(secondToLast.content).toContain('reply only in English');
   });
 
   it('does not add a reminder message when no language was detected', () => {

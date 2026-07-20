@@ -38,6 +38,19 @@ function languageInstructionFor(detectedLanguage: string | null): string {
     : 'Detecta el idioma del visitante y responde siempre en ese mismo idioma.';
 }
 
+// Recordatorio de idioma escrito en el propio idioma destino: con un modelo
+// chico, una instrucción en el idioma en que debe responder refuerza mucho
+// más que la misma instrucción en español, porque el modelo tiende a
+// continuar generando en el idioma del texto que acaba de leer.
+const LANGUAGE_REMINDERS: Record<string, string> = {
+  inglés: 'IMPORTANT: reply only in English, even though earlier messages in this conversation were in a different language. Do not continue in the previous language.',
+  español: 'IMPORTANTE: responde únicamente en español, aunque los mensajes anteriores de esta conversación hayan sido en otro idioma. No continúes en el idioma anterior.',
+  portugués: 'IMPORTANTE: responda apenas em português, mesmo que as mensagens anteriores desta conversa tenham sido em outro idioma. Não continue no idioma anterior.',
+  francés: "IMPORTANT : réponds uniquement en français, même si les messages précédents de cette conversation étaient dans une autre langue. Ne continue pas dans la langue précédente.",
+  alemán: 'WICHTIG: Antworte ausschließlich auf Deutsch, auch wenn frühere Nachrichten in diesem Gespräch in einer anderen Sprache waren. Setze das Gespräch nicht in der vorherigen Sprache fort.',
+  italiano: "IMPORTANTE: rispondi solo in italiano, anche se i messaggi precedenti di questa conversazione erano in un'altra lingua. Non continuare nella lingua precedente.",
+};
+
 export function buildPrompt(
   systemPrompt: string,
   knowledgeSources: KnowledgeSource[],
@@ -68,14 +81,17 @@ export function buildPrompt(
 
   // Con un modelo chico, una instrucción enterrada al inicio de un system
   // prompt largo (persona + base de conocimiento en español) se ignora con
-  // frecuencia. Repetirla en un mensaje aparte justo antes del turno del
-  // usuario le da mucho más peso (recencia) y mejora notablemente que la
-  // respete — verificado contra la API real con mensajes cortos como "hi".
-  if (detectedLanguage) {
-    messages.push({ role: 'system', content: `Recordatorio: responde en ${detectedLanguage}.` });
+  // frecuencia, y hasta un mensaje `system` aparte pierde contra varios
+  // turnos previos de historial en otro idioma. Repetir la instrucción
+  // pegada al final del propio mensaje del usuario (el último texto que el
+  // modelo lee antes de generar) es lo que más peso le da.
+  const reminder = detectedLanguage ? LANGUAGE_REMINDERS[detectedLanguage] : undefined;
+  if (reminder) {
+    messages.push({ role: 'system', content: reminder });
+    messages.push({ role: 'user', content: `${userMessage}\n\n(${reminder})` });
+  } else {
+    messages.push({ role: 'user', content: userMessage });
   }
-
-  messages.push({ role: 'user', content: userMessage });
 
   return messages;
 }
