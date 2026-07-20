@@ -109,16 +109,20 @@ describe.skipIf(!shouldRun)('RLS cross-tenant isolation', () => {
     const { data: businessB } = await clientB.from('businesses').select('id').single();
 
     // B sube un objeto bajo su propio prefijo de business_id.
+    // Se usa un body binario crudo + { contentType } en vez de Blob/File:
+    // el SDK de Storage sube Blob/File via multipart/form-data sin declarar
+    // el Content-Type real en el form, lo que rompería el whitelist del
+    // bucket (migración 0010) incluso con un tipo válido.
     const path = `${businessB!.id}/secreto.txt`;
     const { error: uploadErrorB } = await clientB.storage
       .from('knowledge-docs')
-      .upload(path, new Blob(['contenido confidencial de B']));
+      .upload(path, new TextEncoder().encode('contenido confidencial de B'), { contentType: 'text/plain' });
     expect(uploadErrorB).toBeNull();
 
     // A no puede subir un objeto bajo el prefijo de B.
     const { error: crossUploadError } = await clientA.storage
       .from('knowledge-docs')
-      .upload(`${businessB!.id}/intruso.txt`, new Blob(['payload de A']));
+      .upload(`${businessB!.id}/intruso.txt`, new TextEncoder().encode('payload de A'), { contentType: 'text/plain' });
     expect(crossUploadError).not.toBeNull();
 
     // A no puede leer el objeto de B.
@@ -135,7 +139,7 @@ describe.skipIf(!shouldRun)('RLS cross-tenant isolation', () => {
     // A si puede subir bajo su propio prefijo.
     const { error: ownUploadError } = await clientA.storage
       .from('knowledge-docs')
-      .upload(`${businessA!.id}/propio.txt`, new Blob(['contenido de A']));
+      .upload(`${businessA!.id}/propio.txt`, new TextEncoder().encode('contenido de A'), { contentType: 'text/plain' });
     expect(ownUploadError).toBeNull();
   });
 });

@@ -50,11 +50,16 @@ describe.skipIf(!shouldRun)('storage bucket MIME/size limits', () => {
     if (userId) await admin.auth.admin.deleteUser(userId);
   });
 
+  // El SDK de Storage sube Blob/File como multipart/form-data sin declarar
+  // el Content-Type real en el form (bug conocido de @supabase/storage-js:
+  // el campo `contentType` de las opciones solo se respeta cuando el body
+  // es binario crudo). Se usa Uint8Array + { contentType } para ejercer el
+  // mismo Content-Type que realmente llega al servidor.
   it('rechaza un Content-Type fuera de whitelist en avatars', async () => {
     const path = `${businessId}/malicious.svg`;
     const { error } = await admin.storage
       .from('avatars')
-      .upload(path, new Blob(['<svg onload="alert(1)"></svg>']), { contentType: 'image/svg+xml' });
+      .upload(path, new TextEncoder().encode('<svg onload="alert(1)"></svg>'), { contentType: 'image/svg+xml' });
     expect(error).not.toBeNull();
   });
 
@@ -62,7 +67,7 @@ describe.skipIf(!shouldRun)('storage bucket MIME/size limits', () => {
     const path = `${businessId}/foto.png`;
     const { error } = await admin.storage
       .from('avatars')
-      .upload(path, new Blob(['fake-png-bytes']), { contentType: 'image/png' });
+      .upload(path, new TextEncoder().encode('fake-png-bytes'), { contentType: 'image/png' });
     expect(error).toBeNull();
     if (!error) uploadedPaths.push({ bucket: 'avatars', path });
   });
@@ -71,7 +76,7 @@ describe.skipIf(!shouldRun)('storage bucket MIME/size limits', () => {
     const path = `${businessId}/script.html`;
     const { error } = await admin.storage
       .from('knowledge-docs')
-      .upload(path, new Blob(['<script>alert(1)</script>']), { contentType: 'text/html' });
+      .upload(path, new TextEncoder().encode('<script>alert(1)</script>'), { contentType: 'text/html' });
     expect(error).not.toBeNull();
   });
 
@@ -79,7 +84,7 @@ describe.skipIf(!shouldRun)('storage bucket MIME/size limits', () => {
     const path = `${businessId}/manual.pdf`;
     const { error } = await admin.storage
       .from('knowledge-docs')
-      .upload(path, new Blob(['%PDF-1.4 fake']), { contentType: 'application/pdf' });
+      .upload(path, new TextEncoder().encode('%PDF-1.4 fake'), { contentType: 'application/pdf' });
     expect(error).toBeNull();
     if (!error) uploadedPaths.push({ bucket: 'knowledge-docs', path });
   });
