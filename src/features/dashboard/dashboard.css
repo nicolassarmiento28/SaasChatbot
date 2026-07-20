@@ -215,6 +215,47 @@
   }
 }
 
+.dash-alerta-cuota {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border: 1px solid;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.lp-root[data-theme='light'] .dash-alerta-cuota {
+  background: #faeeda;
+  border-color: #fac775;
+  color: #412402;
+}
+
+.lp-root[data-theme='dark'] .dash-alerta-cuota {
+  background: #412402;
+  border-color: #633806;
+  color: #fac775;
+}
+
+.dash-alerta-cuota__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.dash-alerta-cuota__close {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+}
+
 .dash-stat-card {
   border-radius: 14px;
   padding: 20px;

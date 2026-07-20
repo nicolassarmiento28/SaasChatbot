@@ -26,6 +26,7 @@ const ConversationsPage = lazy(() =>
   import('./features/dashboard/ConversationsPage').then((m) => ({ default: m.ConversationsPage })),
 );
 const UsagePage = lazy(() => import('./features/dashboard/UsagePage').then((m) => ({ default: m.UsagePage })));
+const PlanPage = lazy(() => import('./features/dashboard/PlanPage').then((m) => ({ default: m.PlanPage })));
 const DemoPage = lazy(() => import('./features/landing/DemoPage').then((m) => ({ default: m.DemoPage })));
 
 export function App() {
@@ -74,6 +75,7 @@ export function App() {
               <Route path="/dashboard/bots/:id/knowledge" element={<BotKnowledgePage />} />
               <Route path="/dashboard/conversaciones" element={<ConversationsPage />} />
               <Route path="/dashboard/uso" element={<UsagePage />} />
+              <Route path="/dashboard/plan" element={<PlanPage />} />
             </Route>
             <Route
               path="/onboarding"

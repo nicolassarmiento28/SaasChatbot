@@ -1,11 +1,13 @@
 import { Button, Col, Result, Row, Space, Spin, Statistic, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { AlertaCuota } from './AlertaCuota';
 import { BotHealthBadge } from './BotHealthBadge';
 import { useDashboardSummary } from './useDashboardSummary';
 
 export function DashboardPage() {
   const { activeConversationsToday, messagesUsedThisMonth, messageLimit, bots, loading } = useDashboardSummary();
   const navigate = useNavigate();
+  const quotaPercent = (messagesUsedThisMonth / messageLimit) * 100;
 
   if (!loading && bots.length === 0) {
     return (
@@ -27,6 +29,10 @@ export function DashboardPage() {
       <Typography.Title level={3} style={{ marginBottom: 16 }}>
         Dashboard
       </Typography.Title>
+
+      {!loading && (
+        <AlertaCuota messagesUsed={messagesUsedThisMonth} messageLimit={messageLimit} quotaPercent={quotaPercent} />
+      )}
 
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} lg={8}>
