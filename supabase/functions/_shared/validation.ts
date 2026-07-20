@@ -3,8 +3,15 @@ export const MAX_MESSAGE_LENGTH = 4000;
 // eslint-disable-next-line no-control-regex
 const CONTROL_CHARS = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g;
 
+// Unicode bidi control chars (RTL/LTR override and embedding marks) pueden
+// invertir visualmente el texto mostrado en el dashboard/historial.
+const BIDI_CONTROL_CHARS = /[‪-‮⁦-⁩‎‏]/g;
+
 export function sanitizeMessage(raw: string): string {
-  return raw.replace(CONTROL_CHARS, '').trim().slice(0, MAX_MESSAGE_LENGTH);
+  const cleaned = raw.replace(CONTROL_CHARS, '').replace(BIDI_CONTROL_CHARS, '').trim();
+  // Trunca por code point, no por code unit UTF-16, para no cortar un
+  // surrogate pair (emoji) a la mitad y dejar un carácter huérfano inválido.
+  return Array.from(cleaned).slice(0, MAX_MESSAGE_LENGTH).join('');
 }
 
 // Frases típicas de intentos de manipular el system prompt. No se usa para

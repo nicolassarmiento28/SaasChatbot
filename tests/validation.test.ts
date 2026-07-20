@@ -14,6 +14,25 @@ describe('sanitizeMessage', () => {
     const long = 'a'.repeat(MAX_MESSAGE_LENGTH + 100);
     expect(sanitizeMessage(long)).toHaveLength(MAX_MESSAGE_LENGTH);
   });
+
+  it('strips RTL override characters', () => {
+    expect(sanitizeMessage('hola‮mundo')).toBe('holamundo');
+  });
+
+  it('strips other bidi control characters (LTR override, embedding, isolate marks)', () => {
+    expect(sanitizeMessage('a‪b‫c⁦d⁩e‎f‏g')).toBe('abcdefg');
+  });
+
+  it('does not split a surrogate pair (emoji) at the length boundary', () => {
+    const long = '👍'.repeat(MAX_MESSAGE_LENGTH + 10); // cada emoji cuenta 1 code point
+    const result = sanitizeMessage(long);
+    expect(Array.from(result)).toHaveLength(MAX_MESSAGE_LENGTH);
+    // Un high surrogate (\uD800-\uDBFF) al final sin su low surrogate
+    // emparejado indica que se cortó un emoji a la mitad.
+    const lastCode = result.charCodeAt(result.length - 1);
+    const isUnpairedHighSurrogate = lastCode >= 0xd800 && lastCode <= 0xdbff;
+    expect(isUnpairedHighSurrogate).toBe(false);
+  });
 });
 
 describe('flagsPromptInjection', () => {
