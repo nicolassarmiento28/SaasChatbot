@@ -6,6 +6,7 @@ import { BotForm } from './BotForm';
 import { BotList } from './BotList';
 import { WidgetSnippetModal } from './WidgetSnippetModal';
 import { useBots, type BotInput } from './useBots';
+import type { BotTemplateFaq } from './botTemplates';
 import type { Bot } from './types';
 
 export function BotsPage() {
@@ -47,12 +48,17 @@ export function BotsPage() {
     });
   }
 
-  async function handleSubmit(input: BotInput) {
+  async function handleSubmit(input: BotInput, templateFaqs?: BotTemplateFaq[]) {
     try {
       if (editingBot) {
         await updateBot(editingBot.id, input);
       } else {
-        await createBot(input);
+        const newBot = await createBot(input);
+        if (templateFaqs?.length) {
+          await supabase
+            .from('knowledge_sources')
+            .insert(templateFaqs.map((faq) => ({ bot_id: newBot.id, type: 'faq', title: faq.title, content: faq.content, file_url: null })));
+        }
       }
       setFormOpen(false);
       setEditingBot(null);

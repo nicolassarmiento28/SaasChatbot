@@ -56,16 +56,21 @@ export function useBots() {
       .single();
     if (businessError || !business) throw new Error('No se encontró el negocio del usuario');
 
-    const { error: insertError } = await supabase.from('bots').insert({
-      business_id: business.id,
-      name: input.name,
-      tone: input.tone,
-      primary_color: input.primary_color,
-      avatar_url: input.avatar_url,
-      system_prompt: buildSystemPrompt(input.name, input.tone),
-    });
+    const { data: newBot, error: insertError } = await supabase
+      .from('bots')
+      .insert({
+        business_id: business.id,
+        name: input.name,
+        tone: input.tone,
+        primary_color: input.primary_color,
+        avatar_url: input.avatar_url,
+        system_prompt: buildSystemPrompt(input.name, input.tone),
+      })
+      .select()
+      .single();
     if (insertError) throw insertError;
     await refresh();
+    return newBot as Bot;
   }
 
   async function updateBot(id: string, input: BotInput) {

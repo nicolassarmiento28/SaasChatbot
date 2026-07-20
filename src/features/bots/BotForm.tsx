@@ -1,6 +1,7 @@
-import { Button, Col, Form, Grid, Input, Modal, Row, Select } from 'antd';
+import { Button, Col, Form, Grid, Input, Modal, Row, Select, Space } from 'antd';
 import { useEffect, useState } from 'react';
 import { BotPreviewChat } from './BotPreviewChat';
+import { BOT_TEMPLATES, type BotTemplateFaq } from './botTemplates';
 import type { BotInput } from './useBots';
 import type { Bot } from './types';
 
@@ -8,7 +9,7 @@ interface BotFormProps {
   open: boolean;
   initialBot?: Bot | null;
   onCancel: () => void;
-  onSubmit: (input: BotInput) => Promise<void>;
+  onSubmit: (input: BotInput, templateFaqs?: BotTemplateFaq[]) => Promise<void>;
 }
 
 const DEFAULT_VALUES: BotInput = { name: '', tone: 'amigable', primary_color: '#1677ff', avatar_url: null };
@@ -19,6 +20,8 @@ export function BotForm({ open, initialBot, onCancel, onSubmit }: BotFormProps) 
   const screens = Grid.useBreakpoint();
   const isDesktop = screens.md ?? true;
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [templateId, setTemplateId] = useState<string | undefined>();
+  const [appliedFaqs, setAppliedFaqs] = useState<BotTemplateFaq[] | undefined>();
 
   useEffect(() => {
     if (open) {
@@ -32,11 +35,36 @@ export function BotForm({ open, initialBot, onCancel, onSubmit }: BotFormProps) 
             }
           : DEFAULT_VALUES,
       );
+      setTemplateId(undefined);
+      setAppliedFaqs(undefined);
     }
   }, [open, initialBot, form]);
 
+  function applyTemplate() {
+    const template = BOT_TEMPLATES.find((t) => t.id === templateId);
+    if (!template) return;
+    form.setFieldsValue({ tone: template.tone });
+    setAppliedFaqs(template.faqs);
+  }
+
   const formFields = (
     <Form form={form} layout="vertical">
+      {!initialBot && (
+        <Form.Item label="Plantilla por rubro">
+          <Space.Compact style={{ width: '100%' }}>
+            <Select
+              placeholder="Elegir rubro"
+              style={{ flex: 1 }}
+              value={templateId}
+              onChange={setTemplateId}
+              options={BOT_TEMPLATES.map((t) => ({ value: t.id, label: t.label }))}
+            />
+            <Button onClick={applyTemplate} disabled={!templateId}>
+              Aplicar plantilla
+            </Button>
+          </Space.Compact>
+        </Form.Item>
+      )}
       <Form.Item name="name" label="Nombre" rules={[{ required: true, message: 'El nombre es obligatorio' }]}>
         <Input placeholder="Asistente de Ventas" />
       </Form.Item>
@@ -74,7 +102,7 @@ export function BotForm({ open, initialBot, onCancel, onSubmit }: BotFormProps) 
       width={isDesktop ? 'min(900px, 92vw)' : 'min(520px, 92vw)'}
       title={initialBot ? 'Editar bot' : 'Nuevo bot'}
       onCancel={onCancel}
-      onOk={() => form.validateFields().then(onSubmit)}
+      onOk={() => form.validateFields().then((input) => onSubmit(input, appliedFaqs))}
       okText="Guardar"
       cancelText="Cancelar"
     >
