@@ -44,10 +44,13 @@ const baseProps = {
   searchQuery: '',
   matchingIds: null,
   dateRange: null,
+  needsReviewFilter: false,
+  needsReviewIds: new Set<string>(),
   onBotFilterChange: noop,
   onSourceFilterChange: noop,
   onSearchQueryChange: noop,
   onDateRangeChange: noop,
+  onNeedsReviewFilterChange: noop,
   onSelect: noop,
   onGetSnippet: noop,
 };
@@ -91,5 +94,32 @@ describe('ConversationList', () => {
 
     expect(screen.queryByText('visitor-1')).toBeNull();
     expect(screen.getByText('visitor-2')).toBeTruthy();
+  });
+
+  it('"Necesita revisión" filters to conversations with low-confidence messages', () => {
+    render(
+      <ConversationList
+        {...baseProps}
+        conversations={[conversation, otherConversation]}
+        needsReviewFilter
+        needsReviewIds={new Set(['conv-2'])}
+      />,
+    );
+
+    expect(screen.queryByText('visitor-1')).toBeNull();
+    expect(screen.getByText('visitor-2')).toBeTruthy();
+  });
+
+  it('shows a positive empty state when "Necesita revisión" has no matches', () => {
+    render(
+      <ConversationList
+        {...baseProps}
+        conversations={[conversation, otherConversation]}
+        needsReviewFilter
+        needsReviewIds={new Set()}
+      />,
+    );
+
+    expect(screen.getByText(/Tu bot está respondiendo bien/)).toBeTruthy();
   });
 });

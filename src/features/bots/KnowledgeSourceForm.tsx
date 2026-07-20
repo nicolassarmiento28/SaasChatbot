@@ -6,11 +6,12 @@ import type { KnowledgeSource } from './types';
 interface KnowledgeSourceFormProps {
   open: boolean;
   initialSource?: KnowledgeSource | null;
+  prefill?: Partial<KnowledgeSourceInput>;
   onCancel: () => void;
   onSubmit: (input: KnowledgeSourceInput) => Promise<void>;
 }
 
-export function KnowledgeSourceForm({ open, initialSource, onCancel, onSubmit }: KnowledgeSourceFormProps) {
+export function KnowledgeSourceForm({ open, initialSource, prefill, onCancel, onSubmit }: KnowledgeSourceFormProps) {
   const [form] = Form.useForm<KnowledgeSourceInput>();
 
   useEffect(() => {
@@ -23,10 +24,10 @@ export function KnowledgeSourceForm({ open, initialSource, onCancel, onSubmit }:
               content: initialSource.content,
               file_url: initialSource.file_url,
             }
-          : { type: 'text', title: '', content: '', file_url: null },
+          : { type: 'text', title: '', content: '', file_url: null, ...prefill },
       );
     }
-  }, [open, initialSource, form]);
+  }, [open, initialSource, prefill, form]);
 
   return (
     <Modal

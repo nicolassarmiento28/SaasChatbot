@@ -1,5 +1,5 @@
 import type { Dayjs } from 'dayjs';
-import { Button, DatePicker, Empty, Input, Select, Space, Table } from 'antd';
+import { Button, DatePicker, Empty, Input, Select, Space, Switch, Table } from 'antd';
 import type { Bot } from '../bots/types';
 import type { ConversationRow } from './types';
 
@@ -14,10 +14,13 @@ interface ConversationListProps {
   searchQuery: string;
   matchingIds: Set<string> | null;
   dateRange: [Dayjs | null, Dayjs | null] | null;
+  needsReviewFilter: boolean;
+  needsReviewIds: Set<string>;
   onBotFilterChange: (botId: string | null) => void;
   onSourceFilterChange: (source: 'widget' | 'demo' | null) => void;
   onSearchQueryChange: (query: string) => void;
   onDateRangeChange: (range: [Dayjs | null, Dayjs | null] | null) => void;
+  onNeedsReviewFilterChange: (value: boolean) => void;
   onSelect: (conversation: ConversationRow) => void;
   onGetSnippet: () => void;
 }
@@ -31,10 +34,13 @@ export function ConversationList({
   searchQuery,
   matchingIds,
   dateRange,
+  needsReviewFilter,
+  needsReviewIds,
   onBotFilterChange,
   onSourceFilterChange,
   onSearchQueryChange,
   onDateRangeChange,
+  onNeedsReviewFilterChange,
   onSelect,
   onGetSnippet,
 }: ConversationListProps) {
@@ -46,6 +52,7 @@ export function ConversationList({
     if (botFilter && conversation.bot_id !== botFilter) return false;
     if (sourceFilter && conversation.source !== sourceFilter) return false;
     if (matchingIds && !matchingIds.has(conversation.id)) return false;
+    if (needsReviewFilter && !needsReviewIds.has(conversation.id)) return false;
     const startedAt = new Date(conversation.started_at);
     if (rangeStart && startedAt < rangeStart.startOf('day').toDate()) return false;
     if (rangeEnd && startedAt > rangeEnd.endOf('day').toDate()) return false;
@@ -92,9 +99,16 @@ export function ConversationList({
           ]}
         />
         <RangePicker value={dateRange ?? undefined} onChange={(range) => onDateRangeChange(range)} />
+        <Space size={8}>
+          <Switch checked={needsReviewFilter} onChange={onNeedsReviewFilterChange} />
+          <span>Necesita revisión</span>
+        </Space>
       </Space>
 
-      <Table
+      {needsReviewFilter && filtered.length === 0 ? (
+        <Empty description="¡Tu bot está respondiendo bien! No hay preguntas sin responder esta semana." />
+      ) : (
+        <Table
         rowKey="id"
         loading={loading}
         dataSource={filtered}
@@ -111,7 +125,8 @@ export function ConversationList({
             render: (startedAt: string) => new Date(startedAt).toLocaleString(),
           },
         ]}
-      />
+        />
+      )}
     </div>
   );
 }

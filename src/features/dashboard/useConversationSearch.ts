@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../../shared/supabaseClient';
 
 const DEBOUNCE_MS = 300;
@@ -9,6 +9,9 @@ const DEBOUNCE_MS = 300;
 export function useConversationSearch(conversationIds: string[], query: string) {
   const [matchingIds, setMatchingIds] = useState<Set<string> | null>(null);
   const [loading, setLoading] = useState(false);
+  // conversationIds llega como un array nuevo en cada render del padre; usamos
+  // una clave estable para no re-disparar el efecto (y su debounce) en cada render.
+  const idsKey = useMemo(() => conversationIds.join(','), [conversationIds]);
 
   useEffect(() => {
     const trimmed = query.trim();
@@ -29,7 +32,7 @@ export function useConversationSearch(conversationIds: string[], query: string) 
     }, DEBOUNCE_MS);
 
     return () => clearTimeout(timeout);
-  }, [conversationIds, query]);
+  }, [idsKey, query]);
 
   return { matchingIds, loading };
 }
