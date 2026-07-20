@@ -1,9 +1,10 @@
-import { Avatar, Button, Space, Switch, Table } from 'antd';
+import { Alert, Avatar, Button, Space, Switch, Table } from 'antd';
 import type { Bot } from './types';
 
 interface BotListProps {
   bots: Bot[];
   loading: boolean;
+  knowledgeCounts: Record<string, number>;
   onEdit: (bot: Bot) => void;
   onDelete: (bot: Bot) => void;
   onToggleActive: (bot: Bot, isActive: boolean) => void;
@@ -14,14 +15,33 @@ interface BotListProps {
 export function BotList({
   bots,
   loading,
+  knowledgeCounts,
   onEdit,
   onDelete,
   onToggleActive,
   onManageKnowledge,
   onShowWidget,
 }: BotListProps) {
+  const botsWithoutKnowledge = bots.filter((bot) => !knowledgeCounts[bot.id]);
+
   return (
-    <Table
+    <>
+      {!loading &&
+        botsWithoutKnowledge.map((bot) => (
+          <Alert
+            key={bot.id}
+            type="warning"
+            showIcon
+            style={{ marginBottom: 12 }}
+            message={`Tu bot "${bot.name}" responderá mejor si agregas información de tu negocio`}
+            action={
+              <Button size="small" onClick={() => onManageKnowledge(bot)}>
+                Agregar conocimiento
+              </Button>
+            }
+          />
+        ))}
+      <Table
       rowKey="id"
       loading={loading}
       dataSource={bots}
@@ -63,6 +83,7 @@ export function BotList({
           ),
         },
       ]}
-    />
+      />
+    </>
   );
 }

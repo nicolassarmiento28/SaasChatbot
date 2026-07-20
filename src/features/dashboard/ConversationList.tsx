@@ -1,4 +1,4 @@
-import { Select, Space, Table } from 'antd';
+import { Button, Empty, Select, Space, Table } from 'antd';
 import type { Bot } from '../bots/types';
 import type { ConversationRow } from './types';
 
@@ -11,6 +11,7 @@ interface ConversationListProps {
   onBotFilterChange: (botId: string | null) => void;
   onSourceFilterChange: (source: 'widget' | 'demo' | null) => void;
   onSelect: (conversation: ConversationRow) => void;
+  onGetSnippet: () => void;
 }
 
 export function ConversationList({
@@ -22,6 +23,7 @@ export function ConversationList({
   onBotFilterChange,
   onSourceFilterChange,
   onSelect,
+  onGetSnippet,
 }: ConversationListProps) {
   const botNameById = new Map(bots.map((bot) => [bot.id, bot.name]));
 
@@ -29,6 +31,16 @@ export function ConversationList({
     (conversation) =>
       (!botFilter || conversation.bot_id === botFilter) && (!sourceFilter || conversation.source === sourceFilter),
   );
+
+  if (!loading && conversations.length === 0) {
+    return (
+      <Empty description="Aún no hay conversaciones. Comparte tu widget para empezar.">
+        <Button type="primary" onClick={onGetSnippet}>
+          Obtener snippet
+        </Button>
+      </Empty>
+    );
+  }
 
   return (
     <div>

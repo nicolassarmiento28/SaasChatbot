@@ -1,8 +1,25 @@
-import { Col, Row, Space, Spin, Statistic, Typography } from 'antd';
+import { Button, Col, Result, Row, Space, Spin, Statistic, Typography } from 'antd';
+import { useNavigate } from 'react-router-dom';
 import { useDashboardSummary } from './useDashboardSummary';
 
 export function DashboardPage() {
   const { activeConversationsToday, messagesUsedThisMonth, messageLimit, bots, loading } = useDashboardSummary();
+  const navigate = useNavigate();
+
+  if (!loading && bots.length === 0) {
+    return (
+      <Result
+        status="info"
+        title="Aún no tienes un bot"
+        subTitle="Crea tu primer bot para empezar a atender a tus clientes."
+        extra={
+          <Button type="primary" onClick={() => navigate('/onboarding')}>
+            Crear mi primer bot
+          </Button>
+        }
+      />
+    );
+  }
 
   return (
     <div>

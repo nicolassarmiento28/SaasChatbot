@@ -1,6 +1,7 @@
 import { Button, message, Modal, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { supabase } from '../../shared/supabaseClient';
 import { BotForm } from './BotForm';
 import { BotList } from './BotList';
 import { WidgetSnippetModal } from './WidgetSnippetModal';
@@ -12,7 +13,29 @@ export function BotsPage() {
   const [formOpen, setFormOpen] = useState(false);
   const [editingBot, setEditingBot] = useState<Bot | null>(null);
   const [widgetBot, setWidgetBot] = useState<Bot | null>(null);
+  const [knowledgeCounts, setKnowledgeCounts] = useState<Record<string, number>>({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (bots.length === 0) {
+      setKnowledgeCounts({});
+      return;
+    }
+    supabase
+      .from('knowledge_sources')
+      .select('bot_id')
+      .in(
+        'bot_id',
+        bots.map((bot) => bot.id),
+      )
+      .then(({ data }) => {
+        const counts: Record<string, number> = {};
+        for (const row of data ?? []) {
+          counts[row.bot_id] = (counts[row.bot_id] ?? 0) + 1;
+        }
+        setKnowledgeCounts(counts);
+      });
+  }, [bots]);
 
   function confirmDelete(bot: Bot) {
     Modal.confirm({
@@ -65,6 +88,7 @@ export function BotsPage() {
       <BotList
         bots={bots}
         loading={loading}
+        knowledgeCounts={knowledgeCounts}
         onEdit={(bot) => {
           setEditingBot(bot);
           setFormOpen(true);
