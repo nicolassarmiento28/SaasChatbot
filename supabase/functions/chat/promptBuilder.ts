@@ -52,9 +52,21 @@ export function buildPrompt(
 
   const recentHistory = history.slice(-MAX_HISTORY_MESSAGES);
 
-  return [
+  const messages: GroqMessage[] = [
     { role: 'system', content: `${systemPrompt} ${languageInstructionFor(detectedLanguage)}${knowledgeBlock}${ctaBlock}` },
     ...recentHistory.map((m) => ({ role: m.role, content: m.content })),
-    { role: 'user', content: userMessage },
   ];
+
+  // Con un modelo chico, una instrucción enterrada al inicio de un system
+  // prompt largo (persona + base de conocimiento en español) se ignora con
+  // frecuencia. Repetirla en un mensaje aparte justo antes del turno del
+  // usuario le da mucho más peso (recencia) y mejora notablemente que la
+  // respete — verificado contra la API real con mensajes cortos como "hi".
+  if (detectedLanguage) {
+    messages.push({ role: 'system', content: `Recordatorio: responde en ${detectedLanguage}.` });
+  }
+
+  messages.push({ role: 'user', content: userMessage });
+
+  return messages;
 }

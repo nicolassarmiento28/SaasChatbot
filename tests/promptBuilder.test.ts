@@ -59,4 +59,17 @@ describe('buildPrompt', () => {
     expect(result[0].content).toContain('Responde siempre en inglés, el idioma en que escribió el visitante.');
     expect(result[0].content).not.toContain('Detecta el idioma del visitante');
   });
+
+  it('adds a short reminder message right before the user turn when a language was detected', () => {
+    const result = buildPrompt('system', [], [], 'hi', [], 'inglés');
+    const last = result[result.length - 1];
+    const secondToLast = result[result.length - 2];
+    expect(last).toEqual({ role: 'user', content: 'hi' });
+    expect(secondToLast).toEqual({ role: 'system', content: 'Recordatorio: responde en inglés.' });
+  });
+
+  it('does not add a reminder message when no language was detected', () => {
+    const result = buildPrompt('system', [], [], 'hola');
+    expect(result).toHaveLength(2); // solo el system prompt principal + el mensaje del usuario
+  });
 });

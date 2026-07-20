@@ -2,10 +2,13 @@ import { Button, Col, Result, Row, Space, Spin, Statistic, Typography } from 'an
 import { useNavigate } from 'react-router-dom';
 import { AlertaCuota } from './AlertaCuota';
 import { BotHealthBadge } from './BotHealthBadge';
+import { InsightsCard } from './InsightsCard';
 import { useDashboardSummary } from './useDashboardSummary';
+import { useInsights } from './useInsights';
 
 export function DashboardPage() {
   const { activeConversationsToday, messagesUsedThisMonth, messageLimit, bots, loading } = useDashboardSummary();
+  const { content: insightsContent, loading: insightsLoading } = useInsights();
   const navigate = useNavigate();
   const quotaPercent = (messagesUsedThisMonth / messageLimit) * 100;
 
@@ -33,6 +36,8 @@ export function DashboardPage() {
       {!loading && (
         <AlertaCuota messagesUsed={messagesUsedThisMonth} messageLimit={messageLimit} quotaPercent={quotaPercent} />
       )}
+
+      <InsightsCard content={insightsContent} loading={insightsLoading} />
 
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} lg={8}>
