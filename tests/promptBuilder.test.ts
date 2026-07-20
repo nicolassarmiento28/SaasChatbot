@@ -36,7 +36,7 @@ describe('buildPrompt', () => {
 
   it('omits the knowledge block when there are no knowledge sources', () => {
     const result = buildPrompt('system', [], [], 'hola');
-    expect(result[0].content).toBe('system');
+    expect(result[0].content).toBe('system Detecta el idioma del visitante y responde siempre en ese mismo idioma.');
   });
 
   it('mentions available CTA buttons in the system prompt', () => {
@@ -46,6 +46,17 @@ describe('buildPrompt', () => {
 
   it('omits the CTA block when there are no CTA buttons', () => {
     const result = buildPrompt('system', [], [], 'hola', []);
-    expect(result[0].content).toBe('system');
+    expect(result[0].content).toBe('system Detecta el idioma del visitante y responde siempre en ese mismo idioma.');
+  });
+
+  it('falls back to a generic detect-and-match instruction when no language was detected', () => {
+    const result = buildPrompt('system', [], [], 'hola');
+    expect(result[0].content).toContain('Detecta el idioma del visitante y responde siempre en ese mismo idioma.');
+  });
+
+  it('gives a direct instruction naming the detected language instead of the generic one', () => {
+    const result = buildPrompt('system', [], [], 'What are your hours?', [], 'inglés');
+    expect(result[0].content).toContain('Responde siempre en inglés, el idioma en que escribió el visitante.');
+    expect(result[0].content).not.toContain('Detecta el idioma del visitante');
   });
 });

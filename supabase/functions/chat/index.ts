@@ -2,6 +2,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 import { sanitizeMessage } from '../_shared/validation.ts';
 import { buildPrompt } from './promptBuilder.ts';
 import { isRateLimited } from './rateLimit.ts';
+import { detectLanguageName } from './languageDetect.ts';
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX_REQUESTS = 10;
@@ -125,12 +126,15 @@ Deno.serve(async (req) => {
     .eq('conversation_id', conversationId)
     .order('created_at', { ascending: true });
 
+  const detectedLanguage = detectLanguageName(sanitizedMessage);
+
   const prompt = buildPrompt(
     bot.system_prompt,
     knowledgeSources ?? [],
     (history ?? []).slice(0, -1) as { role: 'user' | 'assistant'; content: string }[],
     sanitizedMessage,
     bot.cta_buttons ?? [],
+    detectedLanguage,
   );
 
   const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
