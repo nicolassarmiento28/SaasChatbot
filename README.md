@@ -250,13 +250,11 @@ Desde el dashboard o el último paso del onboarding, copiás un snippet como est
 <script
   src="https://saaschatbotia.vercel.app/widget.js"
   data-bot-id="TU_BOT_ID"
-  data-supabase-url="https://tu-proyecto.supabase.co"
-  data-supabase-anon-key="tu-anon-key"
   defer
 ></script>
 ```
 
-`data-supabase-url` y `data-supabase-anon-key` son las mismas que usás en `.env.local` (la `anon key` es pública por diseño, segura de exponer en el cliente). El script carga los datos públicos del bot (nombre, color, avatar, si está activo) e inyecta un botón flotante + panel de chat aislado en **Shadow DOM**, para no chocar con los estilos del sitio anfitrión.
+El snippet solo necesita `data-bot-id`. La URL y la `anon key` de Supabase **no** se exponen en el HTML: quedan hardcodeadas dentro del bundle `widget.js` en tiempo de build (ver `vite.widget.config.ts`), igual que en cualquier otro build del frontend. El script carga los datos públicos del bot (nombre, color, avatar, si está activo) e inyecta un botón flotante + panel de chat aislado en **Shadow DOM**, para no chocar con los estilos del sitio anfitrión.
 
 Para compilar el bundle del widget localmente:
 

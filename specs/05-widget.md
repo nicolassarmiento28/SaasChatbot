@@ -10,8 +10,13 @@ Edge Function `chat` que orquesta la conversación con la API de Groq
 1. El dueño del negocio copia el snippet desde el dashboard
    (`04-bot-config` / `03-onboarding`):
    ```html
-   <script src="https://cdn.saaschatbotia.com/widget.js" data-bot-id="BOT_ID" defer></script>
+   <script src="https://saaschatbotia.vercel.app/widget.js" data-bot-id="BOT_ID" defer></script>
    ```
+   El snippet solo trae `data-bot-id`. La URL y la `anon key` de Supabase
+   nunca viajan en el HTML del sitio anfitrión: quedan hardcodeadas dentro
+   del bundle `widget.js` en tiempo de build (`vite.widget.config.ts`
+   inyecta `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` vía `define`), igual
+   que cualquier otro build del frontend.
 2. Un visitante final abre el sitio del negocio. El script:
    - genera o recupera un `visitor_id` (uuid) de `localStorage`.
    - hace un `GET` público de solo lectura a `bots` (vía Edge Function o
@@ -41,8 +46,9 @@ Edge Function `chat` que orquesta la conversación con la API de Groq
    mensaje de "servicio no disponible por el momento".
 
 ## 3. Componentes a crear
-- `src/widget/index.ts` — punto de entrada, lee `data-bot-id`, monta el
-  widget.
+- `src/widget/index.ts` — punto de entrada, lee `data-bot-id` del script
+  tag y las credenciales de Supabase de `import.meta.env` (inyectadas en
+  build-time, no del HTML), monta el widget.
 - `src/widget/ChatWidget` (sin framework: DOM API + shadow root) —
   botón flotante, panel de chat, input, lista de mensajes.
 - `src/widget/chatClient.ts` — módulo compartido de llamada al endpoint

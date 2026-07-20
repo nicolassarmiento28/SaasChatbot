@@ -16,8 +16,12 @@ function getVisitorId(): string {
 async function init() {
   const script = document.currentScript as HTMLScriptElement | null;
   const botId = script?.dataset.botId;
-  const supabaseUrl = script?.dataset.supabaseUrl;
-  const supabaseAnonKey = script?.dataset.supabaseAnonKey;
+
+  // La URL y la anon key de Supabase se inyectan en el bundle en tiempo de
+  // build (vite.widget.config.ts), no vienen del HTML del sitio anfitrión:
+  // el snippet que copia el dueño del negocio solo trae data-bot-id.
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
   if (!botId || !supabaseUrl || !supabaseAnonKey) return;
 

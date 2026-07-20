@@ -9,9 +9,7 @@ interface WidgetSnippetModalProps {
 }
 
 function buildSnippet(bot: Bot): string {
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  return `<script src="https://cdn.saaschatbotia.com/widget.js" data-bot-id="${bot.id}" data-supabase-url="${supabaseUrl}" data-supabase-anon-key="${supabaseAnonKey}" defer></script>`;
+  return `<script src="https://saaschatbotia.vercel.app/widget.js" data-bot-id="${bot.id}" defer></script>`;
 }
 
 function buildDemoLink(bot: Bot): string {
