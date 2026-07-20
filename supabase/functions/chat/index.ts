@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
-import { sanitizeMessage } from '../_shared/validation.ts';
+import { flagsPromptInjection, sanitizeMessage } from '../_shared/validation.ts';
 import { buildPrompt } from './promptBuilder.ts';
 import { isRateLimited } from './rateLimit.ts';
 import { detectLanguageName } from './languageDetect.ts';
@@ -108,6 +108,10 @@ Deno.serve(async (req) => {
   }
 
   const sanitizedMessage = sanitizeMessage(message);
+
+  if (flagsPromptInjection(sanitizedMessage)) {
+    console.warn('possible_prompt_injection', { bot_id, visitor_id });
+  }
 
   await supabase.from('messages').insert({
     conversation_id: conversationId,
