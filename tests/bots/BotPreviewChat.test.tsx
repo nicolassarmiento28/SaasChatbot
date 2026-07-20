@@ -23,7 +23,9 @@ describe('BotPreviewChat', () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
 
-    render(<BotPreviewChat botId={null} name="Mi bot" tone="amigable" primaryColor="#1677ff" avatarUrl={null} />);
+    render(
+      <BotPreviewChat botId={null} name="Mi bot" tone="amigable" primaryColor="#1677ff" avatarUrl={null} ctaButtons={[]} />,
+    );
 
     sendPreviewMessage('Hola');
 
@@ -37,10 +39,36 @@ describe('BotPreviewChat', () => {
       vi.fn().mockResolvedValue({ ok: true, json: async () => ({ conversation_id: 'conv-1', reply: 'Respuesta real' }) }),
     );
 
-    render(<BotPreviewChat botId="bot-1" name="Mi bot" tone="formal" primaryColor="#1677ff" avatarUrl={null} />);
+    render(
+      <BotPreviewChat botId="bot-1" name="Mi bot" tone="formal" primaryColor="#1677ff" avatarUrl={null} ctaButtons={[]} />,
+    );
 
     sendPreviewMessage('Hola');
 
     await waitFor(() => expect(screen.getByText('Respuesta real')).toBeTruthy());
+  });
+
+  it('shows CTA buttons after the first reply, linking to their configured URL', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({ ok: true, json: async () => ({ conversation_id: 'conv-1', reply: 'Respuesta real' }) }),
+    );
+
+    render(
+      <BotPreviewChat
+        botId="bot-1"
+        name="Mi bot"
+        tone="formal"
+        primaryColor="#1677ff"
+        avatarUrl={null}
+        ctaButtons={[{ label: 'Ver menú', url: 'https://example.com/menu' }]}
+      />,
+    );
+
+    sendPreviewMessage('Hola');
+
+    await waitFor(() => expect(screen.getByText('Respuesta real')).toBeTruthy());
+    const ctaLink = screen.getByRole('link', { name: 'Ver menú' });
+    expect(ctaLink.getAttribute('href')).toBe('https://example.com/menu');
   });
 });

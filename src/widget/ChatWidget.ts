@@ -30,6 +30,10 @@ export function mountChatWidget(options: ChatWidgetOptions): void {
     .input-row { display: flex; border-top: 1px solid #e5e7eb; }
     .input-row input { flex: 1; border: none; padding: 10px; font-size: 14px; }
     .input-row button { border: none; background: none; padding: 0 12px; cursor: pointer; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+    .cta-btn { border: 1px solid ${options.bot.primary_color ?? '#4f46e5'};
+      color: ${options.bot.primary_color ?? '#4f46e5'}; background: #fff; border-radius: 6px;
+      padding: 4px 10px; font-size: 13px; cursor: pointer; }
   `;
 
   const button = document.createElement('button');
@@ -65,6 +69,21 @@ export function mountChatWidget(options: ChatWidgetOptions): void {
     messages.scrollTop = messages.scrollHeight;
   }
 
+  function appendCtaButtons(buttons: { label: string; url: string }[]) {
+    if (!buttons.length) return;
+    const row = document.createElement('div');
+    row.className = 'cta-row';
+    for (const cta of buttons) {
+      const btn = document.createElement('button');
+      btn.className = 'cta-btn';
+      btn.textContent = cta.label;
+      btn.addEventListener('click', () => window.open(cta.url, '_blank', 'noopener,noreferrer'));
+      row.appendChild(btn);
+    }
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
   button.addEventListener('click', () => {
     panel.classList.toggle('open');
   });
@@ -84,6 +103,7 @@ export function mountChatWidget(options: ChatWidgetOptions): void {
       });
       options.setConversationId(result.conversation_id);
       appendMessage('assistant', result.reply);
+      appendCtaButtons(result.cta_buttons ?? []);
     } catch {
       appendMessage('assistant', GENERIC_ERROR_MESSAGE);
     }

@@ -6,9 +6,15 @@ export interface BotConfig {
   is_active: boolean;
 }
 
+export interface CtaButton {
+  label: string;
+  url: string;
+}
+
 export interface ChatReply {
   conversation_id: string;
   reply: string;
+  cta_buttons?: CtaButton[];
 }
 
 export interface ChatClientOptions {

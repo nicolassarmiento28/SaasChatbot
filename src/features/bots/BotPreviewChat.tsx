@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Avatar, Button, Card, Input, Space, Typography } from 'antd';
 import { sendMessage } from '../../widget/chatClient';
 import type { BotTone } from './systemPrompt';
+import type { CtaButton } from './types';
 
 const MOCK_REPLIES: Record<BotTone, string> = {
   formal: 'Buen día. Con gusto le ayudo — este es un ejemplo de cómo respondería el bot.',
@@ -25,9 +26,10 @@ interface BotPreviewChatProps {
   tone: BotTone;
   primaryColor: string;
   avatarUrl: string | null;
+  ctaButtons: CtaButton[];
 }
 
-export function BotPreviewChat({ botId, name, tone, primaryColor, avatarUrl }: BotPreviewChatProps) {
+export function BotPreviewChat({ botId, name, tone, primaryColor, avatarUrl, ctaButtons }: BotPreviewChatProps) {
   const [messages, setMessages] = useState<PreviewMessage[]>([]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
@@ -95,6 +97,15 @@ export function BotPreviewChat({ botId, name, tone, primaryColor, avatarUrl }: B
             </div>
           </div>
         ))}
+        {messages.some((m) => m.role === 'assistant') && ctaButtons.length > 0 && (
+          <Space wrap style={{ justifyContent: 'flex-end', width: '100%', display: 'flex' }}>
+            {ctaButtons.map((cta, i) => (
+              <Button key={i} size="small" href={cta.url} target="_blank" rel="noreferrer" style={{ borderColor: primaryColor, color: primaryColor }}>
+                {cta.label}
+              </Button>
+            ))}
+          </Space>
+        )}
       </div>
       <Space.Compact style={{ width: '100%' }}>
         <Input

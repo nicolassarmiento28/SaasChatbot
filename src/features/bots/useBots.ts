@@ -2,13 +2,15 @@ import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../../shared/supabaseClient';
 import { useSession } from '../auth/useSession';
 import { buildSystemPrompt, type BotTone } from './systemPrompt';
-import type { Bot } from './types';
+import { sanitizeCtaButtons } from './ctaButtons';
+import type { Bot, CtaButton } from './types';
 
 export interface BotInput {
   name: string;
   tone: BotTone;
   primary_color: string;
   avatar_url: string | null;
+  cta_buttons: CtaButton[];
 }
 
 export function useBots() {
@@ -65,6 +67,7 @@ export function useBots() {
         primary_color: input.primary_color,
         avatar_url: input.avatar_url,
         system_prompt: buildSystemPrompt(input.name, input.tone),
+        cta_buttons: sanitizeCtaButtons(input.cta_buttons),
       })
       .select()
       .single();
@@ -82,6 +85,7 @@ export function useBots() {
         primary_color: input.primary_color,
         avatar_url: input.avatar_url,
         system_prompt: buildSystemPrompt(input.name, input.tone),
+        cta_buttons: sanitizeCtaButtons(input.cta_buttons),
       })
       .eq('id', id);
     if (updateError) throw updateError;

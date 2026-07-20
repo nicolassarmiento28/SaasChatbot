@@ -37,7 +37,7 @@ Deno.serve(async (req) => {
 
   const { data: bot, error: botError } = await supabase
     .from('bots')
-    .select('id, business_id, system_prompt, is_active')
+    .select('id, business_id, system_prompt, is_active, cta_buttons')
     .eq('id', bot_id)
     .single();
 
@@ -130,6 +130,7 @@ Deno.serve(async (req) => {
     knowledgeSources ?? [],
     (history ?? []).slice(0, -1) as { role: 'user' | 'assistant'; content: string }[],
     sanitizedMessage,
+    bot.cta_buttons ?? [],
   );
 
   const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -163,5 +164,5 @@ Deno.serve(async (req) => {
     { onConflict: 'business_id,period' },
   );
 
-  return jsonResponse({ conversation_id: conversationId, reply });
+  return jsonResponse({ conversation_id: conversationId, reply, cta_buttons: bot.cta_buttons ?? [] });
 });

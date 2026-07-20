@@ -2,6 +2,7 @@ import { Button, Col, Form, Grid, Input, Modal, Row, Select, Space } from 'antd'
 import { useEffect, useState } from 'react';
 import { BotPreviewChat } from './BotPreviewChat';
 import { BOT_TEMPLATES, type BotTemplateFaq } from './botTemplates';
+import { CtaButtonsConfig } from './CtaButtonsConfig';
 import type { BotInput } from './useBots';
 import type { Bot } from './types';
 
@@ -12,7 +13,13 @@ interface BotFormProps {
   onSubmit: (input: BotInput, templateFaqs?: BotTemplateFaq[]) => Promise<void>;
 }
 
-const DEFAULT_VALUES: BotInput = { name: '', tone: 'amigable', primary_color: '#1677ff', avatar_url: null };
+const DEFAULT_VALUES: BotInput = {
+  name: '',
+  tone: 'amigable',
+  primary_color: '#1677ff',
+  avatar_url: null,
+  cta_buttons: [],
+};
 
 export function BotForm({ open, initialBot, onCancel, onSubmit }: BotFormProps) {
   const [form] = Form.useForm<BotInput>();
@@ -32,6 +39,7 @@ export function BotForm({ open, initialBot, onCancel, onSubmit }: BotFormProps) 
               tone: initialBot.tone,
               primary_color: initialBot.primary_color,
               avatar_url: initialBot.avatar_url,
+              cta_buttons: initialBot.cta_buttons,
             }
           : DEFAULT_VALUES,
       );
@@ -83,6 +91,7 @@ export function BotForm({ open, initialBot, onCancel, onSubmit }: BotFormProps) 
       <Form.Item name="avatar_url" label="URL del avatar">
         <Input placeholder="https://..." />
       </Form.Item>
+      <CtaButtonsConfig />
     </Form>
   );
 
@@ -93,6 +102,7 @@ export function BotForm({ open, initialBot, onCancel, onSubmit }: BotFormProps) 
       tone={values.tone || DEFAULT_VALUES.tone}
       primaryColor={values.primary_color || DEFAULT_VALUES.primary_color}
       avatarUrl={values.avatar_url ?? null}
+      ctaButtons={values.cta_buttons ?? []}
     />
   );
 

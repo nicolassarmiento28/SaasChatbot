@@ -1,5 +1,10 @@
 import type { BotTone } from './systemPrompt';
 
+export interface CtaButton {
+  label: string;
+  url: string;
+}
+
 export interface Bot {
   id: string;
   business_id: string;
@@ -9,6 +14,7 @@ export interface Bot {
   avatar_url: string | null;
   primary_color: string;
   is_active: boolean;
+  cta_buttons: CtaButton[];
   created_at: string;
 }
 

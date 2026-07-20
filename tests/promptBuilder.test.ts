@@ -38,4 +38,14 @@ describe('buildPrompt', () => {
     const result = buildPrompt('system', [], [], 'hola');
     expect(result[0].content).toBe('system');
   });
+
+  it('mentions available CTA buttons in the system prompt', () => {
+    const result = buildPrompt('system', [], [], 'hola', [{ label: 'Ver menú', url: 'https://example.com' }]);
+    expect(result[0].content).toContain('Ver menú');
+  });
+
+  it('omits the CTA block when there are no CTA buttons', () => {
+    const result = buildPrompt('system', [], [], 'hola', []);
+    expect(result[0].content).toBe('system');
+  });
 });

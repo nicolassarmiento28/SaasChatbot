@@ -55,6 +55,7 @@ describe('DashboardPage', () => {
           avatar_url: null,
           primary_color: '#000',
           is_active: true,
+    cta_buttons: [],
           created_at: '2026-01-01T00:00:00Z',
         },
       ],
