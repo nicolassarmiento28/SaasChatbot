@@ -61,13 +61,30 @@ Deno.serve(async (req) => {
 
   const { data: cached } = await supabase
     .from('insights')
-    .select('content')
+    .select('content, generating')
     .eq('business_id', business.id)
     .eq('week_start', weekStart)
     .maybeSingle();
 
-  if (cached) {
+  if (cached && !cached.generating) {
     return jsonResponse({ content: cached.content });
+  }
+
+  if (cached && cached.generating) {
+    // Otro request ya está generando este insight; no dispares una segunda
+    // llamada a Groq para el mismo business_id/week_start.
+    return jsonResponse({ status: 'generating' }, 202);
+  }
+
+  // Intenta reservar el lock insertando el placeholder. Si otro request
+  // concurrente ya lo insertó, el unique(business_id, week_start) rechaza
+  // este insert y sabemos que perdimos la carrera.
+  const { error: lockError } = await supabase
+    .from('insights')
+    .insert({ business_id: business.id, week_start: weekStart, content: '', generating: true });
+
+  if (lockError) {
+    return jsonResponse({ status: 'generating' }, 202);
   }
 
   const { data: bots } = await supabase.from('bots').select('id').eq('business_id', business.id);
@@ -112,6 +129,13 @@ Deno.serve(async (req) => {
     });
 
     if (!groqResponse.ok) {
+      // Libera el lock para que un request posterior pueda reintentar en
+      // vez de quedar bloqueado en `generating` para siempre.
+      await supabase
+        .from('insights')
+        .delete()
+        .eq('business_id', business.id)
+        .eq('week_start', weekStart);
       return jsonResponse({ error: 'server_error' }, 502);
     }
 
@@ -120,7 +144,7 @@ Deno.serve(async (req) => {
   }
 
   await supabase.from('insights').upsert(
-    { business_id: business.id, week_start: weekStart, content },
+    { business_id: business.id, week_start: weekStart, content, generating: false },
     { onConflict: 'business_id,week_start' },
   );
 
