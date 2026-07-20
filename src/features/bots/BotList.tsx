@@ -1,4 +1,5 @@
 import { Alert, Avatar, Button, Space, Switch, Table } from 'antd';
+import { BotHealthBadge } from '../dashboard/BotHealthBadge';
 import type { Bot } from './types';
 
 interface BotListProps {
@@ -56,6 +57,10 @@ export function BotList({
         },
         { title: 'Nombre', dataIndex: 'name' },
         { title: 'Tono', dataIndex: 'tone' },
+        {
+          title: 'Salud',
+          render: (_: unknown, bot: Bot) => <BotHealthBadge botId={bot.id} />,
+        },
         {
           title: 'Activo',
           dataIndex: 'is_active',

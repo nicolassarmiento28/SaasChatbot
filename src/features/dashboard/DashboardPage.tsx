@@ -1,5 +1,6 @@
 import { Button, Col, Result, Row, Space, Spin, Statistic, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { BotHealthBadge } from './BotHealthBadge';
 import { useDashboardSummary } from './useDashboardSummary';
 
 export function DashboardPage() {
@@ -47,8 +48,11 @@ export function DashboardPage() {
             <Typography.Text strong>Bots</Typography.Text>
             <Space direction="vertical" style={{ marginTop: 12, width: '100%' }}>
               {bots.map((bot) => (
-                <div key={bot.id} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  {bot.name}
+                <div key={bot.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Space>
+                    {bot.name}
+                    <BotHealthBadge botId={bot.id} />
+                  </Space>
                   <span className={`dash-badge ${bot.is_active ? 'dash-badge--active' : 'dash-badge--inactive'}`}>
                     {bot.is_active ? 'Activo' : 'Inactivo'}
                   </span>
