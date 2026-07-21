@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 SaasChatbotIA
+# SaasChatbotIA
 
 **Crea el chatbot de atención al cliente de tu negocio en minutos, sin escribir una línea de código.**
 
@@ -333,6 +333,6 @@ Este proyecto sigue una metodología de **Spec Driven Development**: toda funcio
 
 <div align="center">
 
-Hecho con ☕ para negocios pequeños.
+Hecho para negocios pequeños.
 
 </div>
