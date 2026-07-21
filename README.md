@@ -17,7 +17,7 @@
 
 ---
 
-## 📖 Qué es SaasChatbotIA
+## Qué es SaasChatbotIA
 
 **SaasChatbotIA** es un SaaS pensado para dueños de negocios pequeños (restaurantes, clínicas, tiendas online, inmobiliarias) que quieren ofrecer atención al cliente 24/7 sin contratar personal técnico ni escribir código.
 
@@ -33,9 +33,9 @@ El bot queda operativo al instante, respondiendo preguntas frecuentes en el idio
 
 ---
 
-## 🔗 Demo en vivo
+## Demo en vivo
 
-👉 **[saaschatbotia.vercel.app](https://saaschatbotia.vercel.app)**
+**[saaschatbotia.vercel.app](https://saaschatbotia.vercel.app)**
 
 La landing incluye un demo interactivo del bot sin necesidad de registrarte.
 
@@ -43,24 +43,24 @@ La landing incluye un demo interactivo del bot sin necesidad de registrarte.
 
 ---
 
-## ✨ Funcionalidades
+## Funcionalidades
 
-**🏠 Landing**
+**Landing**
 - Demo en vivo del chatbot embebido en la propia landing.
 - Modo claro/oscuro con persistencia, diseño responsive.
 
-**🔐 Autenticación**
+**Autenticación**
 - Registro/login con email+contraseña o magic link (Supabase Auth).
 - Creación automática del negocio (`businesses`) al registrarse, vía trigger de Postgres.
 
-**🚀 Onboarding guiado (5 pasos)**
+**Onboarding guiado (5 pasos)**
 - Elegir plantilla por rubro (restaurante, clínica, tienda online, inmobiliaria) o empezar desde cero.
 - Configurar datos del negocio y del bot con **preview en vivo** del widget.
 - Cargar base de conocimiento inicial (texto, FAQ o documento).
 - Probar el bot en un mini-chat antes de publicar.
 - Copiar el snippet de instalación.
 
-**⚙️ Configuración del bot**
+**Configuración del bot**
 - Nombre, tono, color de marca, avatar.
 - Plantillas de personalidad por industria con FAQs precargadas.
 - Hasta 3 botones de acción (CTA) configurables (label + URL, validados server-side).
@@ -68,17 +68,17 @@ La landing incluye un demo interactivo del bot sin necesidad de registrarte.
 - Activar/desactivar el bot, límites de bots según el plan contratado.
 - Base de conocimiento con fuentes de tipo texto, FAQ o documento (PDF/txt subido a Storage).
 
-**📊 Dashboard**
+**Dashboard**
 - Conversaciones en tiempo real (Supabase Realtime), con filtros por bot, origen, fecha y "necesita revisión".
 - Detalle de cada hilo, marcado de respuestas de baja confianza y botón para agregarlas a la base de conocimiento.
 - Gráfico de uso mensual, comparación de planes y alertas proactivas de cuota.
 - **Insights semanales generados por IA**: preguntas frecuentes, temas sin respuesta clara y sugerencias de mejora, cacheados por negocio/semana.
 
-**💬 Widget embebible**
+**Widget embebible**
 - Vanilla JS sin dependencias, aislado con Shadow DOM (no choca con los estilos del sitio anfitrión).
 - Botón flotante + panel de chat, historial de conversación, botones CTA clickeables.
 
-**🔒 Seguridad**
+**Seguridad**
 - Row Level Security (RLS) en todas las tablas de negocio: aislamiento estricto por `business_id`/`owner_id`.
 - Rate limiting atómico (RPC de Postgres con advisory lock) por `visitor_id` + IP + `bot_id`.
 - Constraint a nivel de base de datos que rechaza esquemas de URL peligrosos (`javascript:`, `data:`, `vbscript:`) en los botones CTA.
@@ -88,7 +88,7 @@ La landing incluye un demo interactivo del bot sin necesidad de registrarte.
 
 ---
 
-## 🛠️ Stack tecnológico
+## Stack tecnológico
 
 | Tecnología | Uso | Por qué se eligió |
 |---|---|---|
@@ -106,7 +106,7 @@ La landing incluye un demo interactivo del bot sin necesidad de registrarte.
 
 ---
 
-## 🏗️ Arquitectura
+## Arquitectura
 
 ```
                      ┌──────────────────────────┐
@@ -148,7 +148,7 @@ La landing incluye un demo interactivo del bot sin necesidad de registrarte.
 
 ---
 
-## 📂 Estructura del proyecto
+## Estructura del proyecto
 
 ```
 SaasChatbotIA/
@@ -174,7 +174,7 @@ SaasChatbotIA/
 
 ---
 
-## 🚀 Getting started
+## Getting started
 
 ### Prerrequisitos
 
@@ -233,7 +233,7 @@ npm run dev
 
 ---
 
-## 👤 Cómo usar la app
+## Cómo usar la app
 
 1. **Registro** en `/auth` (email+contraseña o magic link) → se crea tu negocio automáticamente.
 2. **Onboarding** (`/onboarding`): elegís una plantilla de industria, configurás el bot con preview en vivo, cargás conocimiento inicial y lo probás en un mini-chat.
@@ -242,7 +242,7 @@ npm run dev
 
 ---
 
-## 🔌 Widget embebible
+## Widget embebible
 
 Desde el dashboard o el último paso del onboarding, copiás un snippet como este y lo pegás antes del `</body>` de tu sitio:
 
@@ -264,7 +264,7 @@ npm run build:widget
 
 ---
 
-## 🧪 Tests
+## Tests
 
 ```bash
 npm test
@@ -284,7 +284,7 @@ Estos verifican, contra la base real: aislamiento RLS entre negocios, el constra
 
 ---
 
-## ☁️ Deploy
+## Deploy
 
 **Frontend (Vercel)** — el proyecto ya está linkeado a Vercel:
 
@@ -303,7 +303,7 @@ supabase functions deploy insights
 
 ---
 
-## 📋 Spec Driven Development
+## Spec Driven Development
 
 Este proyecto sigue una metodología de **Spec Driven Development**: toda funcionalidad se especifica en `specs/` *antes* de escribir código. Las specs actuales:
 
@@ -321,7 +321,7 @@ Este proyecto sigue una metodología de **Spec Driven Development**: toda funcio
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 - [ ] Más plantillas de personalidad por industria
 - [ ] Soporte para más idiomas en la detección automática
