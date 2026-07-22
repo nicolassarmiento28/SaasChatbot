@@ -41,6 +41,21 @@ La landing incluye un demo interactivo del bot sin necesidad de registrarte.
 
 ![Landing de SaasChatbotIA](docs/screenshot.jpg)
 
+<table>
+<tr>
+<td><img src="docs/screenshot-landing.jpg" alt="Landing - modo claro" width="400"></td>
+<td><img src="docs/screenshot-landing-dark.jpg" alt="Landing - modo oscuro" width="400"></td>
+</tr>
+<tr>
+<td><img src="docs/screenshot-login.jpg" alt="Pantalla de login" width="400"></td>
+<td><img src="docs/screenshot-dashboard.jpg" alt="Dashboard con insights" width="400"></td>
+</tr>
+<tr>
+<td><img src="docs/screenshot-bots.jpg" alt="Gestión de bots" width="400"></td>
+<td></td>
+</tr>
+</table>
+
 ---
 
 ## Funcionalidades
