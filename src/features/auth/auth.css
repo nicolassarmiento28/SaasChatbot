@@ -136,8 +136,8 @@
 }
 
 .lp-root[data-theme='light'] .auth-demo-card {
-  background: #e1f5ee;
-  border: 1px solid #9fe1cb;
+  background: #f2faf7;
+  border: 1px solid #c3ecdb;
 }
 
 .lp-root[data-theme='dark'] .auth-demo-card {
