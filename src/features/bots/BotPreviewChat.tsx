@@ -111,7 +111,10 @@ export function BotPreviewChat({ botId, name, tone, primaryColor, avatarUrl, cta
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onPressEnter={handleSend}
+          onPressEnter={(e) => {
+            e.preventDefault();
+            handleSend();
+          }}
           placeholder="Escribe un mensaje de prueba..."
           disabled={sending}
         />
