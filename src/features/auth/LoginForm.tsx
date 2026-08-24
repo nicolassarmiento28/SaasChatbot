@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, Input, Button, Alert, Typography, Card } from 'antd';
+import { Form, Input, Button, Alert, Typography, Card, ConfigProvider, theme } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../shared/supabaseClient';
 
@@ -53,24 +53,26 @@ export function LoginForm() {
         </Form.Item>
       </Form>
 
-      <Card size="small" style={{ marginBottom: 16, background: '#fff7ed', borderColor: '#fed7aa' }}>
-        <Typography.Text strong>
-          🍽️ Prueba el dashboard con "Restaurante La Brasa"
-        </Typography.Text>
-        <Typography.Paragraph style={{ margin: '8px 0' }}>
-          Es una cuenta demo ya configurada con un chatbot y base de conocimiento reales,
-          para que explores el panel sin crear tu propia cuenta.
-        </Typography.Paragraph>
-        <Typography.Text code copyable style={{ display: 'block' }}>
-          {DEMO_CREDENTIALS.email}
-        </Typography.Text>
-        <Typography.Text code copyable style={{ display: 'block', marginBottom: 8 }}>
-          {DEMO_CREDENTIALS.password}
-        </Typography.Text>
-        <Button onClick={fillDemoCredentials} block>
-          Usar cuenta demo
-        </Button>
-      </Card>
+      <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
+        <Card size="small" style={{ marginBottom: 16, background: '#fff7ed', borderColor: '#fed7aa' }}>
+          <Typography.Text strong>
+            🍽️ Prueba el dashboard con "Restaurante La Brasa"
+          </Typography.Text>
+          <Typography.Paragraph style={{ margin: '8px 0' }}>
+            Es una cuenta demo ya configurada con un chatbot y base de conocimiento reales,
+            para que explores el panel sin crear tu propia cuenta.
+          </Typography.Paragraph>
+          <Typography.Text code copyable style={{ display: 'block' }}>
+            {DEMO_CREDENTIALS.email}
+          </Typography.Text>
+          <Typography.Text code copyable style={{ display: 'block', marginBottom: 8 }}>
+            {DEMO_CREDENTIALS.password}
+          </Typography.Text>
+          <Button onClick={fillDemoCredentials} block>
+            Usar cuenta demo
+          </Button>
+        </Card>
+      </ConfigProvider>
 
       <Typography.Paragraph>
         <Link to="/recuperar-password">¿Olvidaste tu contraseña?</Link>
