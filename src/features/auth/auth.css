@@ -127,3 +127,14 @@
 .auth-card .ant-input-affix-wrapper {
   border-color: var(--lp-border);
 }
+
+.auth-demo-card {
+  background: var(--lp-info-bg);
+  border: 1px solid var(--lp-info-border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 300ms ease, border-color 300ms ease;
+}
