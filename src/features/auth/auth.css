@@ -129,12 +129,20 @@
 }
 
 .auth-demo-card {
-  background: var(--lp-info-bg);
-  border: 1px solid var(--lp-info-border);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 16px;
+  transition: background 300ms ease, border-color 300ms ease;
+}
+
+.lp-root[data-theme='light'] .auth-demo-card {
+  background: #e1f5ee;
+  border: 1px solid #9fe1cb;
+}
+
+.lp-root[data-theme='dark'] .auth-demo-card {
+  background: var(--lp-info-bg);
+  border: 1px solid var(--lp-info-border);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  transition: background 300ms ease, border-color 300ms ease;
 }
