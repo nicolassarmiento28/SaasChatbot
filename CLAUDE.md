@@ -7,7 +7,7 @@ SaaS donde dueños de negocios pequeños crean su propio chatbot de atención al
 ## Stack
 - Frontend: React + Vite + Ant Design
 - Backend: Supabase (Auth, DB, Storage)
-- IA: Groq API (llama-3.1-8b-instant)
+- IA: Groq API (openai/gpt-oss-20b)
 - Widget: Vanilla JS
 - Landing page: React + Vite + Ant Design
 

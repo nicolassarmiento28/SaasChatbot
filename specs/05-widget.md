@@ -4,7 +4,7 @@
 Proveer un script vanilla JS embebible que cualquier negocio pueda pegar en
 su sitio web para exponer su chatbot a sus usuarios finales, junto con la
 Edge Function `chat` que orquesta la conversación con la API de Groq
-(llama-3.1-8b-instant).
+(openai/gpt-oss-20b).
 
 ## 2. Flujo del usuario paso a paso
 1. El dueño del negocio copia el snippet desde el dashboard

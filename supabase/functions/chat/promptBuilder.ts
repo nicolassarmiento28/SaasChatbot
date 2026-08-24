@@ -29,7 +29,7 @@ const ANTI_INJECTION_INSTRUCTION =
 // specs/04-bot-config.md §6: sin configuración adicional del dueño del
 // negocio, el bot responde en el idioma del visitante. Una instrucción
 // directa ("responde en inglés") es mucho más confiable para un modelo
-// chico como llama-3.1-8b-instant que pedirle que "detecte y adapte" por
+// chico como openai/gpt-oss-20b que pedirle que "detecte y adapte" por
 // su cuenta — por eso el idioma se detecta antes (languageDetect.ts) y se
 // pasa aquí ya resuelto cuando fue posible determinarlo con confianza.
 function languageInstructionFor(detectedLanguage: string | null): string {

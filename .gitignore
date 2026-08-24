@@ -7,3 +7,4 @@ tsconfig.tsbuildinfo
 .agents
 
 .vercel
+.playwright-mcp

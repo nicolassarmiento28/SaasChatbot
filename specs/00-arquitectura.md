@@ -14,14 +14,14 @@ tiene tres superficies:
    web para exponer el chatbot a sus usuarios finales.
 
 El backend es serverless sobre Supabase (Postgres + Auth + Storage + Realtime) y la
-inteligencia conversacional se delega en la API de Groq (llama-3.1-8b-instant).
+inteligencia conversacional se delega en la API de Groq (openai/gpt-oss-20b).
 
 ## 2. Diagrama de arquitectura (texto)
 
 ```
                             ┌───────────────────────────┐
                             │         Groq API          │
-                            │   (llama-3.1-8b-instant)  │
+                            │    (openai/gpt-oss-20b)   │
                             └─────────────▲─────────────┘
                                         │ prompts / respuestas
                                         │
@@ -177,7 +177,7 @@ businesses 1───N usage_metrics
    - guarda el mensaje del usuario en `messages`.
    - arma el prompt: `system_prompt` del bot + `knowledge_sources` relevantes
      + historial reciente de la conversación.
-   - llama a la API de Groq (llama-3.1-8b-instant) con la API key (`GROQ_API_KEY`)
+   - llama a la API de Groq (openai/gpt-oss-20b) con la API key (`GROQ_API_KEY`)
      guardada como secreto de servidor (nunca expuesta al cliente).
    - guarda la respuesta en `messages` y la devuelve al widget.
 4. El widget renderiza la respuesta y actualiza `usage_metrics` (vía la misma

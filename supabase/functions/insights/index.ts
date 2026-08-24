@@ -125,7 +125,7 @@ Deno.serve(async (req) => {
         Authorization: `Bearer ${Deno.env.get('GROQ_API_KEY')}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ model: 'llama-3.1-8b-instant', messages: buildInsightsPrompt(messages) }),
+      body: JSON.stringify({ model: 'openai/gpt-oss-20b', messages: buildInsightsPrompt(messages) }),
     });
 
     if (!groqResponse.ok) {

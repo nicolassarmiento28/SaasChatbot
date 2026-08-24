@@ -114,7 +114,7 @@ La landing incluye un demo interactivo del bot sin necesidad de registrarte.
 | **Supabase (Storage)** | Avatares y documentos de base de conocimiento | Buckets con políticas de acceso y whitelist de tipo MIME |
 | **Supabase (Realtime)** | Conversaciones en vivo en el dashboard | Suscripciones a cambios en Postgres sin infraestructura adicional |
 | **Supabase Edge Functions (Deno)** | `chat`, `insights` | Ejecuta lógica server-side cerca de la DB, mantiene secretos fuera del cliente |
-| **Groq API (`llama-3.1-8b-instant`)** | Motor de IA del chatbot | Latencia muy baja y costo bajo, ideal para respuestas conversacionales cortas |
+| **Groq API (`openai/gpt-oss-20b`)** | Motor de IA del chatbot | Latencia muy baja y costo bajo, ideal para respuestas conversacionales cortas |
 | **Vanilla JS (widget)** | Script embebible en sitios de terceros | Cero dependencias y Shadow DOM para no interferir con el sitio anfitrión |
 | **Vitest + Testing Library** | Tests unitarios y de componentes | Integración nativa con Vite, rápido en CI local |
 | **Vercel** | Deploy del frontend | Deploy automático por push, preview URLs |

@@ -16,7 +16,7 @@ hacia el registro.
    - llama a la Edge Function `POST /functions/v1/chat` con
      `bot_id` = bot de demo del producto (fijo, configurado por env var),
      `source = 'demo'`.
-5. Recibe la respuesta de Groq (llama-3.1-8b-instant) y la renderiza en el hilo de chat.
+5. Recibe la respuesta de Groq (openai/gpt-oss-20b) y la renderiza en el hilo de chat.
 6. Tras 1–2 intercambios, se muestra un banner/CTA "Crea tu propio chatbot" que
    lleva a `/registro` (feature `02-auth`).
 7. El visitante puede seguir chateando sin límite artificial de mensajes,

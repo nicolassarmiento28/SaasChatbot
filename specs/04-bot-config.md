@@ -58,7 +58,7 @@ dashboard, generando el system_prompt que usará la Edge Function chat.
 - El system_prompt incluye instrucción fija: "Detecta el idioma del visitante
   y responde siempre en ese mismo idioma."
 - No requiere cambios en el modelo de datos.
-- Idiomas soportados: cualquiera que soporte llama-3.1-8b-instant.
+- Idiomas soportados: cualquiera que soporte openai/gpt-oss-20b.
 
 ## 7. Componentes a crear
 - BotList (tabla/cards de bots con BotHealthBadge).
